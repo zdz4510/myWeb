@@ -5,7 +5,7 @@
     <div class="content" :class="isCollapse ? 'active' : ''">
     
       <div class="pageContent">
-        <div class="routerHistory">
+        <!-- <div class="routerHistory">
           <dsn-router-history>
             <dsn-router-history-item
               @close="close"
@@ -16,7 +16,7 @@
             >
             </dsn-router-history-item>
           </dsn-router-history>
-        </div>
+        </div> -->
         <div class="well">
           <router-view></router-view>
         </div>

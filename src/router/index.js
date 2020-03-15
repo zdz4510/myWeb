@@ -20,30 +20,30 @@ const routes = [
 
   },
   // /**  基础模块 */
-  // {
-  //   path: "/authority",
-  //   name: "base",
-  //   component: () =>
-  //     import(/* webpackChunkName: "layout" */ "../views/layout/"),
-  //   children: [
-  //     {
-  //       path: "list",
-  //       name: "list",
-  //       component: () =>
-  //         import(
-  //           /* webpackChunkName: "test" */ "../views/authoyity/pages/list.vue"
-  //         )
-  //     },
-  //     {
-  //       path: "edit",
-  //       name: "edit",
-  //       component: () =>
-  //         import(
-  //           /* webpackChunkName: "test" */ "../views/authoyity/pages/edit.vue"
-  //         )
-  //     }
-  //   ]
-  // },
+  {
+    path: "/authority",
+    name: "base",
+    component: () =>
+      import(/* webpackChunkName: "layout" */ "../views/layout/"),
+    children: [
+      {
+        path: "list",
+        name: "list",
+        component: () =>
+          import(
+            /* webpackChunkName: "test" */ "../views/authoyity/pages/list.vue"
+          )
+      },
+      {
+        path: "edit",
+        name: "edit",
+        component: () =>
+          import(
+            /* webpackChunkName: "test" */ "../views/authoyity/pages/edit.vue"
+          )
+      }
+    ]
+  },
   /**  基础模块 */
   {
     ...baseRouter

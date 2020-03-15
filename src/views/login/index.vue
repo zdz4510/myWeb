@@ -22,11 +22,11 @@
           <el-input v-model="loginForm.password" type="password"></el-input>
         </el-form-item>
 
-        <el-form-item label="登陆系统:">
+        <!-- <el-form-item label="登陆系统:">
           <el-select v-model="loginForm.systemKey" placeholder="请选择" size="small">
             <el-option :label="item.key" :value="item.id" v-for="item in list" :key="item.id"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item>
           <el-button type="primary" @click="submitForm('loginForm')">登陆</el-button>

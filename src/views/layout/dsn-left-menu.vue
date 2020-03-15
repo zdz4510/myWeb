@@ -5,7 +5,7 @@
         <img src="@/assets/logo.7b8cc895.png" />
       </div>
     </div>
-    <el-menu
+    <!-- <el-menu
       :collapse-transition="false"
       :router="true"
       background-color="#515a6e"
@@ -27,8 +27,31 @@
             name:subitem.key
          }"  :key="subitem.id"  v-for="subitem in item.children"   :index="subitem.id">{{subitem.lable}}</el-menu-item>
        </el-submenu>
-       
-     
+    </el-menu> -->
+     <el-menu
+      default-active="2"
+      class="el-menu-vertical-demo"
+      background-color="#545c64"
+      text-color="#fff"
+      active-text-color="#ffd04b">
+      <template slot="title">
+        <i class="el-icon-location"></i>
+      </template>
+      <router-link to="/base/insertMessage">
+        <el-menu-item index="1">
+          <span slot="title">数据采集</span>
+        </el-menu-item>
+      </router-link>
+      <router-link to="/base/myHealth">
+        <el-menu-item index="2">
+          <span slot="title">个人健康</span>
+        </el-menu-item>
+      </router-link>
+      <router-link to="/Person">
+        <el-menu-item index="3">
+          <span slot="title">我的</span>
+        </el-menu-item>
+      </router-link>
     </el-menu>
   </div>
 </template>
@@ -47,7 +70,7 @@ export default {
     ...mapState({
       list:state=>{
         
-         console.log(state)
+        //  console.log(state,"数据11111")
          const arr =state['userinfo']['userinfo']['menuPermission'];
          if(arr&&arr.length==1){           
               return  arr[0.]['children'];

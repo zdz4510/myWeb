@@ -8,27 +8,27 @@ export default {
   component: () => import(/* webpackChunkName: "layout" */ "@/views/layout"),
   children: [
     {
-      path: "list",
-      name: "list",
+      path: "insertMessage",
+      name: "insertMessage",
       meta:{
-        requiresAuth:true,
-        title:'列表'
+        requiresAuth:false,
+        title:'数据采集'
       },
       component: () =>
         import(
-          /* webpackChunkName: "test" */ "@/views/authoyity/pages/list.vue"
+          /* webpackChunkName: "test" */ "@/views/authoyity/pages/insertMessage.vue"
         )
     },
     {
-      path: "edit",
-      name: "edit",
+      path: "myHealth",
+      name: "myHealth",
       meta:{
-        requiresAuth:true,
-        title:'列表'
+        requiresAuth:false,
+        title:'个人健康'
       },
       component: () =>
         import(
-          /* webpackChunkName: "test" */ "@/views/authoyity/pages/edit.vue"
+          /* webpackChunkName: "test" */ "@/views/authoyity/pages/myHealth.vue"
         )
     },
     //租户信息
