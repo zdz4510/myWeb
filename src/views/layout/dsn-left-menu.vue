@@ -39,16 +39,31 @@
       </template>
       <router-link to="/base/insertMessage">
         <el-menu-item index="1">
-          <span slot="title">数据采集</span>
+          <span slot="title">数据采集管理</span>
         </el-menu-item>
       </router-link>
       <router-link to="/base/myHealth">
         <el-menu-item index="2">
-          <span slot="title">个人健康</span>
+          <span slot="title">个人健康管理</span>
         </el-menu-item>
       </router-link>
-      <router-link to="/Person">
+      <router-link to="/base/myHabit">
         <el-menu-item index="3">
+          <span slot="title">运动饮食管理</span>
+        </el-menu-item>
+      </router-link>
+      <router-link to="/base/myFamily">
+        <el-menu-item index="4">
+          <span slot="title">家人管理</span>
+        </el-menu-item>
+      </router-link>
+      <router-link to="/base/earlyWring">
+        <el-menu-item index="5">
+          <span slot="title">预警管理</span>
+        </el-menu-item>
+      </router-link>
+      <router-link to="/base/mine">
+        <el-menu-item index="6">
           <span slot="title">我的</span>
         </el-menu-item>
       </router-link>

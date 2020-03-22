@@ -44,7 +44,7 @@
         <el-form-item>
             <el-button type="primary">查询</el-button>
             <el-button type="primary">重置</el-button>
-            <el-button type="primary">添加</el-button>
+            <el-button type="primary">新增</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -119,7 +119,7 @@
             :label="item.label"
             :value="item.value">
             </el-option>
-        </el-select>
+          </el-select>
         </el-form-item>
         <el-form-item label="日期：" :label-width="formLabelWidth">
           <el-date-picker
