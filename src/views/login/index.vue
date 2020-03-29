@@ -22,10 +22,16 @@
           <el-input v-model="loginForm.password" type="password"></el-input>
         </el-form-item>
 
-        <!-- <el-form-item label="登陆系统:">
-          <el-select v-model="loginForm.systemKey" placeholder="请选择" size="small">
-            <el-option :label="item.key" :value="item.id" v-for="item in list" :key="item.id"></el-option>
-          </el-select>
+        <!-- <el-form-item
+          prop="systemKey"
+          :rules="[{ required: true, message: '请输入系统', trigger: 'blur' }]"
+        >
+          <dsn-select size="medium" palceholder="请输入系统" v-model="loginForm.systemKey">
+            <el-option v-for="item  in systemKeyList" :key="item" :label="item" :value="item"></el-option>
+          </dsn-select>
+          <span class="left">
+            <i class="icon-xitong iconfont"></i>
+          </span>
         </el-form-item> -->
 
         <el-form-item>
@@ -36,16 +42,17 @@
   </div>
 </template>
 <script>
-import { login, getResourceList } from "@/api/login.api.js";
+import { login, getResourceList,loginConfig } from "@/api/login.api.js";
 export default {
   name: "login",
   data() {
     return {
       loginForm: {
+        tenantCode:"test",
         userName: "",
         password: "",
         usbKey: "abc",
-        systemKey: "",
+        systemKey: "sys",
         tenantSiteCode: "test"
       },
       list: []
@@ -66,20 +73,68 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          login(this.loginForm).then(res => {
-            const result = res.data;
-            const data = result.data;
+          // login(this.loginForm).then(res => {
+          //   const result = res.data;
+          //   const data = result.data;
 
-            this.$cookies.set("mcs.sessionId", data.id, { expires: "8h" });
-            this.$router.push("/welcome?systemId=" + this.loginForm.systemKey);
-            // this.$store.state.userinfo.userinfo
-          });
+          //   this.$cookies.set("mcs.sessionId", data.id, { expires: "8h" });
+          //   this.$router.push("/welcome?systemId=" + this.loginForm.systemKey);
+          //   // this.$store.state.userinfo.userinfo
+          // });
+          this.$router.push("/welcome?systemId=" + this.loginForm.systemKey);
+          // this.handleGetLoginConfig();
         } else {
           console.log("error submit!!");
           return false;
         }
       });
-    }
+    },
+    handleGetLoginConfig() {
+      loginConfig({
+        userName: this.loginForm.userName,
+        password: this.loginForm.password,
+        tenantCode: this.loginForm.tenantCode
+      }).then(data => {
+        const res = data.data;
+        this.code = res.code;
+        if (res.code == 200) {
+          this.loginForm.tenantSiteCode = res.data[0].tenantSiteCode;
+          this.loginForm.systemKey = res.data[0].systemKeyList[2];
+          this.handleLoginConfirm(this.loginForm);
+        } else if (res.code == 201) {
+          this.dialog = true;
+          this.loginConfigList = res.data;
+          this.loginForm.tenantSiteCode = res.data[0].tenantSiteCode;
+          this.systemKeyList = res.data[0].systemKeyList;
+        } else if (res.code == 202) {
+          this.dialog = true;
+          this.loginConfigList = res.data;
+        } else {
+          this.$message({
+            type: "error",
+            message: res.message
+          });
+        }
+      });
+    },
+    handleLoginConfirm() {
+      login(this.loginForm).then(res => {
+        const result = res.data;
+        const data = result.data;
+        if (result.code == 200) {
+          this.dialog = false;
+          this.$cookies.set("mcs.sessionId", data.id, { expires: "8h" });
+          this.$router.push("/welcome?systemId=" + this.loginForm.systemKey);
+        } else {
+          this.$message({
+            type: "error",
+            message: res.message
+          });
+        }
+
+        // this.$store.state.userinfo.userinfo
+      });
+    },
     // resetForm(formName) {
     //   this.$refs[formName].resetFields();
     // }

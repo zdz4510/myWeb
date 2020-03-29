@@ -16,3 +16,10 @@ export const getResourceList  = data => {
     return request.post(`${window.VUE_APP_URL}sso/cus/userInfo?${params}`,);
   };
 
+  // 新的登录接口
+export const loginConfig = data => {
+  return request.post(
+    `${window.VUE_APP_URL}sso/cus/loginConfig?tenantCode=${data.tenantCode}`,
+    data
+  );
+};

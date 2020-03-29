@@ -20,7 +20,6 @@
         </el-form-item>
         <el-form-item>
             <el-button type="primary">新增</el-button>
-            <el-button type="danger">删除</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -30,21 +29,21 @@
       <div>
         <el-form ref="form" :model="form" label-width="100px">
         <el-form-item label="与我的关系:">
-          <el-input v-model="form.relation"></el-input>
+          <el-input v-model="form.relation" :readonly="isReadonly"></el-input>
         </el-form-item>
         <el-form-item label="体温:">
-          <el-input :readonly="true" v-model="form.templature"></el-input>
+          <el-input :readonly="isReadonly" v-model="form.templature"></el-input>
         </el-form-item>
         <el-form-item label="血压:">
           <el-input
-          :readonly="true"
+          :readonly="isReadonly"
             type="number"
             v-model="form.bloodPresure"
             placeholder=""
           ></el-input>
         </el-form-item>
         <el-form-item label="是否健康:">
-          <el-radio-group :readonly="true" v-model="form.status">
+          <el-radio-group :readonly="isReadonly" v-model="form.status">
             <el-radio label="是"></el-radio>
             <el-radio label="否"></el-radio>
           </el-radio-group>
@@ -52,10 +51,14 @@
         <el-form-item label="更新时间：">
           <el-date-picker
              v-model="form.date"
-             :readonly="true"
+             :readonly="isReadonly"
              type="datetime"
              placeholder="选择日期时间">
           </el-date-picker>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" :readonly="isReadonly">保存</el-button>
+          <el-button type="warning" @click="handlerEdit">编辑</el-button>
         </el-form-item>
       </el-form>
       </div>
@@ -84,13 +87,17 @@ export default {
         formInline:{
           name:"",
           relation:""
-        }
+        },
+        isReadonly:true
     };
   },
   methods: {
     handleClick(tab, event) {
         console.log(tab, event);
-      }
+      },
+    handlerEdit(){
+      this.isReadonly=false;
+    }
   }
 };
 </script>
