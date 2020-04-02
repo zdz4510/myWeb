@@ -73,6 +73,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
+           this.$router.push("/welcome");
           // login(this.loginForm).then(res => {
           //   const result = res.data;
           //   const data = result.data;
@@ -81,7 +82,7 @@ export default {
           //   this.$router.push("/welcome?systemId=" + this.loginForm.systemKey);
           //   // this.$store.state.userinfo.userinfo
           // });
-          this.$router.push("/welcome?systemId=" + this.loginForm.systemKey);
+          // this.$router.push("/welcome?systemId=" + this.loginForm.systemKey);
           // this.handleGetLoginConfig();
         } else {
           console.log("error submit!!");

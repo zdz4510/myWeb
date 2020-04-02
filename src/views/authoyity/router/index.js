@@ -3,7 +3,7 @@ export default {
   name: "base",
   meta:{
     requiresAuth:true,
-    title:'基础库表'
+    title:'myWeb'
   },
   component: () => import(/* webpackChunkName: "layout" */ "@/views/layout"),
   children: [

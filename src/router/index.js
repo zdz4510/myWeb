@@ -100,32 +100,32 @@ const router = new VueRouter({
   routes
 });
 
-router.beforeEach((to, from, next) => {
-  document.title = to.meta.title;
-  store.commit("PUSH", {
-    name: to.name,
-    title: to.meta.title || "",
-    path: to.path
-  });
-  let auth = to.matched.some(record => record.meta.requiresAuth);
-  if (auth) {
-    const token = Vue.$cookies.get("mcs.sessionId");
-    const isLogin = token ? true : false;
-    if (!isLogin) {
-      // console.log('token  不存在');
-      next({
-        path: "/login",
-        query: { redirect: to.fullPath } //把要跳转的地址作为参数传到下一步
-      });
-      // 跳转到sys 的登录页面去
-      // const fromUrl = `https://${window.host}/${to}`;
-      // window.location.href = `https://${window.SYS_WEB_HOST}/login?redirect=${to}`
-    } else {
-      next();
-    }
-  } else {
-    next();
-  }
-});
+// router.beforeEach((to, from, next) => {
+//   document.title = to.meta.title;
+//   store.commit("PUSH", {
+//     name: to.name,
+//     title: to.meta.title || "",
+//     path: to.path
+//   });
+//   let auth = to.matched.some(record => record.meta.requiresAuth);
+//   if (auth) {
+//     const token = Vue.$cookies.get("mcs.sessionId");
+//     const isLogin = token ? true : false;
+//     if (!isLogin) {
+//       // console.log('token  不存在');
+//       next({
+//         path: "/login",
+//         query: { redirect: to.fullPath } //把要跳转的地址作为参数传到下一步
+//       });
+//       // 跳转到sys 的登录页面去
+//       // const fromUrl = `https://${window.host}/${to}`;
+//       // window.location.href = `https://${window.SYS_WEB_HOST}/login?redirect=${to}`
+//     } else {
+//       next();
+//     }
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;

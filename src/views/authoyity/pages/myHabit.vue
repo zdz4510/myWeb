@@ -9,7 +9,7 @@
             placeholder="请输入运动时长"
           ></el-input>
         </el-form-item>
-        <el-form-item label="eatDiet：">
+        <el-form-item label="饮食内容：">
           <el-checkbox-group 
                 v-model="formInline.checkedEats">
                 <el-checkbox v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox>
@@ -81,7 +81,7 @@
             placeholder="请输入运动时长"
           ></el-input>
         </el-form-item>
-        <el-form-item label="eatDiet：">
+        <el-form-item label="饮食内容：">
           <el-checkbox-group 
                 v-model="editForm.checkedEats">
                 <el-checkbox v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox>
