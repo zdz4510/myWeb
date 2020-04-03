@@ -64,7 +64,12 @@
       </router-link>
       <router-link to="/base/mine">
         <el-menu-item index="6">
-          <span slot="title">我的</span>
+          <span slot="title">我的信息</span>
+        </el-menu-item>
+      </router-link>
+      <router-link to="/base/myTest">
+        <el-menu-item index="7">
+          <span slot="title">心理测试</span>
         </el-menu-item>
       </router-link>
     </el-menu>
