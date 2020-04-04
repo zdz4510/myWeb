@@ -168,7 +168,8 @@ export default {
     },
     // 复选改变时
     handlerTest(){
-      console.log(this.choiceTest)
+      console.log(this.choiceTest);
+      this.$router.push({ path: "myTest"});
     }
   }
 };

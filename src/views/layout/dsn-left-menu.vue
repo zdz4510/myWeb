@@ -42,6 +42,11 @@
           <span slot="title">数据采集管理</span>
         </el-menu-item>
       </router-link>
+      <router-link to="/base/myTest">
+        <el-menu-item index="7">
+          <span slot="title">心理测试</span>
+        </el-menu-item>
+      </router-link>
       <router-link to="/base/myHealth">
         <el-menu-item index="2">
           <span slot="title">个人健康管理</span>
@@ -65,11 +70,6 @@
       <router-link to="/base/mine">
         <el-menu-item index="6">
           <span slot="title">我的信息</span>
-        </el-menu-item>
-      </router-link>
-      <router-link to="/base/myTest">
-        <el-menu-item index="7">
-          <span slot="title">心理测试</span>
         </el-menu-item>
       </router-link>
     </el-menu>
