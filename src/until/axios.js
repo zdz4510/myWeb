@@ -1,10 +1,17 @@
 import axios from "axios";
-//import qs from "qs";
+import Vue from 'vue'
+import qs from "qs";
 axios.defaults.timeout = 60000;
+// console.log(this,"111")
+// let token = this.$cookies.get("mcs.sessionId") 
+// console.log(token,"222")
 axios.interceptors.request.use(
   config => {
-    // config.data = qs.stringify(config.data);
+    config.data = qs.stringify(config.data);
+    console.log(config.data,"何时使用")
     config.headers["Content-Type"] = "application/x-www-form-urlencoded";
+    const token = Vue.$cookies.get("mcs.sessionId");
+    config.headers["authorization"] = `Bearer ${token}`;
     // config.headers["Content-Type"] = "application/json;charset=UTF-8";
     // config.headers.Ticket = sessionStorage.getItem('Ticket');
     // config.headers["X-Auth-Token"] = `token ${a}`;

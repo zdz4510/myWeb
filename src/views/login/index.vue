@@ -40,14 +40,27 @@
         </el-form-item>
       </el-form>
     </div>
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      <span>注册成功，是否立即登录？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">否</el-button>
+        <el-button type="primary" @click="handlerSure">是</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
-import { login, getResourceList,loginConfig } from "@/api/login.api.js";
+import { mapGetters, mapMutations } from "vuex";
+import { login,userAdd } from "@/api/login.api.js";
 export default {
   name: "login",
   data() {
     return {
+      dialogVisible:false,
       loginForm: {
         username: "",
         password: "",
@@ -55,27 +68,39 @@ export default {
       list: []
     };
   },
+  computed:{
+    ...mapGetters(["user"]),
+  },  
   created() {
 
   },
   methods: {
+    ...mapMutations(["USER"]),
+    handleClose(){
+      this.dialogVisible=false;
+    },
+    handlerSure(){
+      this.dialogVisible=false;
+      this.submitForm("loginForm");
+    },
     // 注册
     submitCheckForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          //  this.$router.push("/welcome");
-          login(this.loginForm).then(res => {
-            const result = res.data;
-            console.log(result,"接口受窘")
-            // this.$cookies.set("mcs.sessionId", data.id, { expires: "8h" });
-            // const data = result.data;
-
-            // this.$cookies.set("mcs.sessionId", data.id, { expires: "8h" });
-            // this.$router.push("/welcome?systemId=" + this.loginForm.systemKey);
-            // this.$store.state.userinfo.userinfo
+          // this.$router.push("/welcome");
+          userAdd(this.loginForm).then(res => {
+            if(res.data.code==200){
+              const result = res.data;
+              this.dialogVisible=true;
+              this.USER(this.loginForm);
+              // this.$cookies.set("mcs.sessionId", result.data, { expires: "8h" });
+            }else{
+              this.$message({
+                 message: res.data.message,
+                type: "warning"
+              });
+            }
           });
-          // this.$router.push("/welcome?systemId=" + this.loginForm.systemKey);
-          // this.handleGetLoginConfig();
         } else {
           console.log("error submit!!");
           return false;
@@ -86,74 +111,25 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          //  this.$router.push("/welcome");
           login(this.loginForm).then(res => {
-            const result = res.data;
-            console.log(result,"接口受窘")
-            // this.$cookies.set("mcs.sessionId", data.id, { expires: "8h" });
-            // const data = result.data;
-
-            // this.$cookies.set("mcs.sessionId", data.id, { expires: "8h" });
-            // this.$router.push("/welcome?systemId=" + this.loginForm.systemKey);
-            // this.$store.state.userinfo.userinfo
+            if(res.data.code==200){
+              const result = res.data;
+              this.$cookies.set("mcs.sessionId", result.data, { expires: "8h" });
+              this.USER(this.loginForm);
+              this.$router.push("/welcome");
+            }else{
+              this.$message({
+                 message: res.data.message,
+                type: "warning"
+              });
+            }
           });
-          // this.$router.push("/welcome?systemId=" + this.loginForm.systemKey);
-          // this.handleGetLoginConfig();
         } else {
           console.log("error submit!!");
           return false;
         }
       });
     },
-    handleGetLoginConfig() {
-      loginConfig({
-        username: this.loginForm.username,
-        password: this.loginForm.password,
-        tenantCode: this.loginForm.tenantCode
-      }).then(data => {
-        const res = data.data;
-        this.code = res.code;
-        if (res.code == 200) {
-          this.loginForm.tenantSiteCode = res.data[0].tenantSiteCode;
-          this.loginForm.systemKey = res.data[0].systemKeyList[2];
-          this.handleLoginConfirm(this.loginForm);
-        } else if (res.code == 201) {
-          this.dialog = true;
-          this.loginConfigList = res.data;
-          this.loginForm.tenantSiteCode = res.data[0].tenantSiteCode;
-          this.systemKeyList = res.data[0].systemKeyList;
-        } else if (res.code == 202) {
-          this.dialog = true;
-          this.loginConfigList = res.data;
-        } else {
-          this.$message({
-            type: "error",
-            message: res.message
-          });
-        }
-      });
-    },
-    handleLoginConfirm() {
-      login(this.loginForm).then(res => {
-        const result = res.data;
-        const data = result.data;
-        if (result.code == 200) {
-          this.dialog = false;
-          this.$cookies.set("mcs.sessionId", data.id, { expires: "8h" });
-          this.$router.push("/welcome?systemId=" + this.loginForm.systemKey);
-        } else {
-          this.$message({
-            type: "error",
-            message: res.message
-          });
-        }
-
-        // this.$store.state.userinfo.userinfo
-      });
-    },
-    // resetForm(formName) {
-    //   this.$refs[formName].resetFields();
-    // }
   }
 };
 </script>

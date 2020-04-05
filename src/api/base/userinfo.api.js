@@ -7,7 +7,7 @@ export const queryTenantPage = data => {
 
 // 上传接口
 export const uploadImg = data => {
-    return request.post(`${window.VUE_APP_URL}mcs/file/upload`, data);
+    return request.post(`${window.VUE_APP_URL}file/fileUpload`, data);
 };
 
 // 查询租户id 

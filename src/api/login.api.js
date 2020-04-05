@@ -1,9 +1,15 @@
 import request from "@/service/";
 import qs from 'querystring'
-// login
+// 登录
 export const login = data => {
     return request.post(`${window.VUE_APP_URL}user/login`, data);
 };
+
+// 注册
+export const userAdd = data => {
+  return request.post(`${window.VUE_APP_URL}user/resign`, data);
+};
+
 
 // type SYSTEM 可以查询
 export const getResourceList  = data => {
