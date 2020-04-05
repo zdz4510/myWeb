@@ -2,7 +2,7 @@ import request from "@/service/";
 import qs from 'querystring'
 // login
 export const login = data => {
-    return request.post(`${window.VUE_APP_URL}sso/cus/login`, data);
+    return request.post(`${window.VUE_APP_URL}user/login`, data);
 };
 
 // type SYSTEM 可以查询

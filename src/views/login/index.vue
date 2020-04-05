@@ -3,13 +3,13 @@
     <div class="loginForm">
       <el-form :model="loginForm" ref="loginForm" label-width="100px" class="demo-dynamic">
         <el-form-item
-          prop="userName"
+          prop="username"
           label="用户名:"
           :rules="[
       { required: true, message: '请输入用户名', trigger: 'blur' },
     ]"
         >
-          <el-input v-model="loginForm.userName"></el-input>
+          <el-input v-model="loginForm.username"></el-input>
         </el-form-item>
 
         <el-form-item
@@ -36,6 +36,7 @@
 
         <el-form-item>
           <el-button type="primary" @click="submitForm('loginForm')">登陆</el-button>
+          <el-button type="primary" @click="submitCheckForm('loginForm')">注册</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -48,40 +49,54 @@ export default {
   data() {
     return {
       loginForm: {
-        tenantCode:"test",
-        userName: "",
+        username: "",
         password: "",
-        usbKey: "abc",
-        systemKey: "sys",
-        tenantSiteCode: "test"
       },
       list: []
     };
   },
   created() {
-    this.handleGetSystemId();
+
   },
   methods: {
-    handleGetSystemId() {
-      getResourceList({ type: "SYSTEM" }).then(data => {
-        const res = data.data;
-        if (res.code == 200) {
-          this.list = res.data.data;
+    // 注册
+    submitCheckForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          //  this.$router.push("/welcome");
+          login(this.loginForm).then(res => {
+            const result = res.data;
+            console.log(result,"接口受窘")
+            // this.$cookies.set("mcs.sessionId", data.id, { expires: "8h" });
+            // const data = result.data;
+
+            // this.$cookies.set("mcs.sessionId", data.id, { expires: "8h" });
+            // this.$router.push("/welcome?systemId=" + this.loginForm.systemKey);
+            // this.$store.state.userinfo.userinfo
+          });
+          // this.$router.push("/welcome?systemId=" + this.loginForm.systemKey);
+          // this.handleGetLoginConfig();
+        } else {
+          console.log("error submit!!");
+          return false;
         }
       });
     },
+    // 登录
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-           this.$router.push("/welcome");
-          // login(this.loginForm).then(res => {
-          //   const result = res.data;
-          //   const data = result.data;
+          //  this.$router.push("/welcome");
+          login(this.loginForm).then(res => {
+            const result = res.data;
+            console.log(result,"接口受窘")
+            // this.$cookies.set("mcs.sessionId", data.id, { expires: "8h" });
+            // const data = result.data;
 
-          //   this.$cookies.set("mcs.sessionId", data.id, { expires: "8h" });
-          //   this.$router.push("/welcome?systemId=" + this.loginForm.systemKey);
-          //   // this.$store.state.userinfo.userinfo
-          // });
+            // this.$cookies.set("mcs.sessionId", data.id, { expires: "8h" });
+            // this.$router.push("/welcome?systemId=" + this.loginForm.systemKey);
+            // this.$store.state.userinfo.userinfo
+          });
           // this.$router.push("/welcome?systemId=" + this.loginForm.systemKey);
           // this.handleGetLoginConfig();
         } else {
@@ -92,7 +107,7 @@ export default {
     },
     handleGetLoginConfig() {
       loginConfig({
-        userName: this.loginForm.userName,
+        username: this.loginForm.username,
         password: this.loginForm.password,
         tenantCode: this.loginForm.tenantCode
       }).then(data => {
