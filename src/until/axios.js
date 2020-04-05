@@ -4,8 +4,8 @@ axios.defaults.timeout = 60000;
 axios.interceptors.request.use(
   config => {
     // config.data = qs.stringify(config.data);
-    //config.headers["Content-Type"] = "application/x-www-form-urlencoded";
-    config.headers["Content-Type"] = "application/json;charset=UTF-8";
+    config.headers["Content-Type"] = "application/x-www-form-urlencoded";
+    // config.headers["Content-Type"] = "application/json;charset=UTF-8";
     // config.headers.Ticket = sessionStorage.getItem('Ticket');
     // config.headers["X-Auth-Token"] = `token ${a}`;
     //  (config)
