@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import {uploadImg} from "../api/mine.api"
+import { uploadImg } from "@/api/common/";
 import {userInfo,updateUserInfo} from "../api/myInfo.api"
 import { mapGetters, mapMutations } from "vuex";
 export default {
@@ -185,7 +185,7 @@ export default {
     },
     // 图片上传
     uploadFile(file){
-      // console.log('aaaaa')
+      console.log(file,"aaa")
       uploadImg(file.raw).then(data=>{
         let res=data.data;
         // console.log(res.data,'返回的数据');

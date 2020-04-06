@@ -8,8 +8,12 @@ axios.defaults.timeout = 60000;
 axios.interceptors.request.use(
   config => {
     config.data = qs.stringify(config.data);
-    console.log(config.data,"何时使用")
-    config.headers["Content-Type"] = "application/x-www-form-urlencoded";
+    console.log(config.url,"何时使用")
+    if(config.url==="http://blog.natapp1.cc/mcs/file/upload"){
+      config.headers["Content-Type"] = "multipart/form-data";
+    }else{
+      config.headers["Content-Type"] = "application/x-www-form-urlencoded";
+    }
     const token = Vue.$cookies.get("mcs.sessionId");
     config.headers["authorization"] = `Bearer ${token}`;
     // config.headers["Content-Type"] = "application/json;charset=UTF-8";
