@@ -11,14 +11,14 @@
                 range-separator="-"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
-                value-format="yyyy-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd"
                 unlink-panels
                 :picker-options="pickerOptions"
                 style="width:270px"
               />
           </el-form-item>
           <el-form-item>
-                <el-button type="primary">查询</el-button>
+                <el-button type="primary" @click="handlerQuery">查询</el-button>
                 <el-button  type="primary">重置</el-button>
                 <el-button  type="primary">新增</el-button>
           </el-form-item>
@@ -84,6 +84,8 @@
 </template>
 
 <script>
+import moment from "moment"
+import {findListInsertMessage} from "../api/insertMessage.api"
 export default {
   name: "myHealth",
   data() {
@@ -134,9 +136,17 @@ export default {
           { '状态': '不正常', '天数': 3530 },
         ]
       },
+          // [
+          //   { '日期': '2020/1/1', '体温': 1393, '心率': 1093, '血压': 32 },
+          //   { '日期': '2020/1/2', '体温': 3530, '心率': 3230, '血压': 26 },
+          //   { '日期': '2020/1/3', '体温': 2923, '心率': 2623, '血压': 76 },
+          //   { '日期': '2020/1/4', '体温': 1723, '心率': 1423, '血压': 49 },
+          //   { '日期': '2020/1/5', '体温': 3792, '心率': 3492, '血压': 323 },
+          //   { '日期': '2020/1/6', '体温': 4593, '心率': 4293, '血压': 78 }
+          // ]
       chartData2: {
           columns: ['日期', '体温', '心率', '血压'],
-          rows: [
+          rows:        [
             { '日期': '2020/1/1', '体温': 1393, '心率': 1093, '血压': 32 },
             { '日期': '2020/1/2', '体温': 3530, '心率': 3230, '血压': 26 },
             { '日期': '2020/1/3', '体温': 2923, '心率': 2623, '血压': 76 },
@@ -145,6 +155,7 @@ export default {
             { '日期': '2020/1/6', '体温': 4593, '心率': 4293, '血压': 78 }
           ]
       },
+      chartData2Arr:[],
       // 单选是否进行心里测试
       choiceTest:false
     };
@@ -170,6 +181,58 @@ export default {
     handlerTest(){
       console.log(this.choiceTest);
       this.$router.push({ path: "myTest"});
+    },
+    // eachFn( OBJ , oldStr, newStr ){
+    //   let newObj = {};
+    //   let arr = arguments[0];
+      
+    //   for( let i in arr ){
+    //     // 深拷贝
+    //     if( typeof arr[i] === 'object' ){
+    //       newObj[ i === oldStr ? newStr : i ] =  arguments.callee( OBJ, oldStr, newStr );
+    //     }else{
+    //     // 浅拷贝
+    //       newObj[ i === oldStr ? newStr : i ] = arr[i];
+    //     }
+    //   }
+      
+    //   return newBoj;
+    // },
+    handlerQuery(){
+      let id = this.$cookies.get("mcs.id");
+      let data={
+        startTime: moment(this.formInline.showDate[0]).format("YYYY-MM-DD"),
+        endTime: moment(this.formInline.showDate[1]).format("YYYY-MM-DD"),
+        id:id
+      }
+      findListInsertMessage(data).then(data=>{
+        let res=data.data;
+        let arr=[];
+        let obj={
+          dateTime:"",
+          templature:"",
+          heartRate:"",
+          bloodPresure:""
+        }
+        res.forEach(item=>{
+          obj.dateTime=item.dateTime
+          obj.templature=item.templature
+          obj.heartRate=item.heartRate
+          obj.bloodPresure=item.bloodPresure
+          arr.push(obj);
+        })
+        let a =JSON.parse(JSON.stringify(arr).replace(/dateTime/g,"日期"));
+        let b=JSON.parse(JSON.stringify(a).replace(/templature/g,"体温"));
+        let c=JSON.parse(JSON.stringify(b).replace(/heartRate/g,"心率"));
+        let d=JSON.parse(JSON.stringify(c).replace(/bloodPresure/g,"血压"));
+        this.chartData2=d;
+        console.log(this.chartData2,"数据是")
+        this.$nextTick(()=>{
+          this.chartData2=this.chartData2.map(item=>{
+            return item
+          })
+        })
+      })
     }
   }
 };

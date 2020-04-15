@@ -1,7 +1,7 @@
 import request from "@/service/";
 
 export const userInfo = data => {
-    return request.get(`${window.VUE_APP_URL}user/getUserInfo`, data);
+    return request.get(`${window.VUE_APP_URL}user/getUserInfo`,{params:data});
 };
 
 export const updateUserInfo = data => {

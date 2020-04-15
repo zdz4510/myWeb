@@ -114,8 +114,9 @@ export default {
           login(this.loginForm).then(res => {
             if(res.data.code==200){
               const result = res.data;
-              this.$cookies.set("mcs.sessionId", result.data, { expires: "8h" });
-              this.USER(this.loginForm);
+              this.$cookies.set("mcs.sessionId", result.data.token, { expires: "8h" });
+              this.$cookies.set("mcs.id", result.data.id, { expires: "8h" });
+              this.USER({...this.loginForm,id:result.data.id});
               this.$router.push("/welcome");
             }else{
               this.$message({

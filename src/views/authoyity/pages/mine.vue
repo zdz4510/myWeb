@@ -1,71 +1,48 @@
 <template>
   <!-- liaojunjie 2019年12月17日14:56:35 -->
   <div id="mine">
-    <el-form :model="numberValidateForm" :inline="true"  ref="numberValidateForm" class="demo-form-inline">
+    <el-form :model="numberValidateForm" :inline="true" :rules="rules" ref="numberValidateForm" class="demo-form-inline">
       <el-row>
         <el-col :span="12">
           <el-form-item
             label="用户名:"
             prop="username"
-            :rules="[
-              { required: true, message: '用户名不能为空'},
-            ]"
           >
             <el-input :readOnly="visableBtn"  v-model.number="numberValidateForm.username" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item
             label="姓名:"
-            prop="realname"
-            :rules="[
-              { required: true, message: '真实姓名不能为空'},
-            ]"
+            prop="real_name"
           >
-            <el-input :readOnly="visableBtn"  v-model.number="numberValidateForm.realname" autocomplete="off"></el-input>
+            <el-input :readOnly="visableBtn"  v-model.number="numberValidateForm.real_name" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item
             label="年龄:"
             prop="age"
-            :rules="[
-              { required: true, message: '年龄不能为空'},
-              { type: 'number', message: '年龄必须为数字值'}
-            ]"
           >
             <el-input :readOnly="visableBtn" v-model.number="numberValidateForm.age" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item
             label="电话:"
             prop="iphone"
-            :rules="[
-              { required: true, message: '电话号码不能为空'},
-              { type: 'number', message: '电话号码必须为数字值'}
-            ]"
           >
             <el-input :readOnly="visableBtn" v-model.number="numberValidateForm.iphone" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item
             label="紧急联系人:"
             prop="emergencyContact"
-            :rules="[
-              { required: true, message: '紧急联系人不能为空'},
-            ]"
           >
             <el-input :readOnly="visableBtn"  v-model.number="numberValidateForm.emergencyContact" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item
             label="紧急联系人电话:"
             prop="emergencyContactIphone"
-            :rules="[
-              { required: true, message: '紧急联系人电话不能为空'},
-            ]"
           >
             <el-input :readOnly="visableBtn"  v-model.number="numberValidateForm.emergencyContactIphone" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item
             label="家庭住址:"
             prop="address"
-            :rules="[
-              { required: true, message: '家庭住址不能为空'},
-            ]"
           >
             <el-input :readOnly="visableBtn" v-model.number="numberValidateForm.address" autocomplete="off"></el-input>
           </el-form-item>
@@ -114,7 +91,7 @@ export default {
       host: `${window.VUE_APP_URL}`,
       visableBtn:true,
       numberValidateForm: {
-        realname:"",
+        real_name:"",
         username:"",
         age: "",
         headImg:"",
@@ -123,6 +100,31 @@ export default {
         emergencyContact:"",
         emergencyContactIphone:"",
         picture:""
+      },
+      rules:{
+        real_name:[
+              { required: true, message: '真实姓名不能为空',trigger: "blur"},
+            ],
+        username:[
+              { required: true, message: '用户名不能为空'},
+            ],
+        age: [
+              { required: true, message: '年龄不能为空'},
+              { type: 'number', message: '年龄必须为数字值'}
+            ],
+        iphone:[
+              { required: true, message: '电话号码不能为空'},
+            ],
+        address:[
+              { required: true, message: '家庭住址不能为空'},
+            ],
+        emergencyContact:[
+              { required: true, message: '紧急联系人不能为空'},
+            ],
+        emergencyContactIphone:[
+              { required: true, message: '紧急联系人电话不能为空'},
+            ],
+        
       }
     };
   },
