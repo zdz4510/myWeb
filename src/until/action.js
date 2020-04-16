@@ -5,47 +5,35 @@
  */
 import { TOKEN, DEVELOPMENT } from "@/constant";
 import VueCookies from "vue-cookies";
-const toLogin = (from, next) => {
-  if (window.NODE_ENV === DEVELOPMENT) {
-    const fromUrl = `https://${window.host}/${to}`;
-    window.location.href = `https://${window.host}/login?redirect=${fromUrl}`;
-  } else {
-    const fromUrl = `https://${window.host}/${to}`;
-    window.location.href = `https://${window.SYS_WEB_HOST}/login?redirect=${fromUrl}`;
-  }
+export const toLogin = () => {
+  window.location.href = `http://${window.location.host}/login`;
 };
 
 /**
  *  删除掉等级的cookie
  */
-const clearToken = () => {
-  //开发环境删除的是本地的cookie
-  if (Window.NODE_ENV === DEVELOPMENT) {
-    VueCookies.remove(TOKEN);
-  } else {
-    // 先上环境删除的是顶级的cookie
-    VueCookies.remove(TOKEN, { domain: window.TOPLEVEL });
-  }
+export const clearToken = () => {
+  VueCookies.remove(TOKEN);
 };
 /**
- *   设置顶级的cookie
- */
-const setToken = token => {
-  //开发环境删除的是本地的cookie
-  if (Window.NODE_ENV == "development") {
-    VueCookies.set(TOKEN, token, { expires: "8h" });
-  } else {
-    // 先上环境删除的是顶级的cookie
-    VueCookies.set(TOKEN, token, { expires: "8h", domain: window.TOPLEVEL });
-  }
-};
+//  *   设置顶级的cookie
+//  */
+// const setToken = token => {
+//   //开发环境删除的是本地的cookie
+//   if (Window.NODE_ENV == "development") {
+//     VueCookies.set(TOKEN, token, { expires: "8h" });
+//   } else {
+//     // 先上环境删除的是顶级的cookie
+//     VueCookies.set(TOKEN, token, { expires: "8h", domain: window.TOPLEVEL });
+//   }
+// };
 
-const getToken = () => {
-  //开发环境删除的是本地的cookie   默认path /
-  if (Window.NODE_ENV == "development") {
-    return  VueCookies.get(TOKEN);
-  } else {
-    // 先上环境删除的是顶级的cookie
-    return  VueCookies.get(TOKEN, { domain: window.TOPLEVEL });
-  }
-};
+// const getToken = () => {
+//   //开发环境删除的是本地的cookie   默认path /
+//   if (Window.NODE_ENV == "development") {
+//     return  VueCookies.get(TOKEN);
+//   } else {
+//     // 先上环境删除的是顶级的cookie
+//     return  VueCookies.get(TOKEN, { domain: window.TOPLEVEL });
+//   }
+// };

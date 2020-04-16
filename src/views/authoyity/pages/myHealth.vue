@@ -221,17 +221,24 @@ export default {
           obj.bloodPresure=item.bloodPresure
           arr.push(obj);
         })
-        let a =JSON.parse(JSON.stringify(arr).replace(/dateTime/g,"日期"));
-        let b=JSON.parse(JSON.stringify(a).replace(/templature/g,"体温"));
-        let c=JSON.parse(JSON.stringify(b).replace(/heartRate/g,"心率"));
-        let d=JSON.parse(JSON.stringify(c).replace(/bloodPresure/g,"血压"));
-        this.chartData2=d;
-        console.log(this.chartData2,"数据是")
-        this.$nextTick(()=>{
-          this.chartData2=this.chartData2.map(item=>{
-            return item
-          })
-        })
+        console.log(arr,"数据是1")
+        // arr.forEach(item=>{
+        //   item.dateTime=item.dateTime+""
+        //   item.templature=item.templature+""
+        //   item.heartRate=item.heartRate+""
+        //   item.bloodPresure=item.bloodPresure+""
+        // })
+        let a =JSON.parse(JSON.stringify(arr).replace(/dateTime/g,"'日期'"));
+        let b=JSON.parse(JSON.stringify(a).replace(/templature/g,"'体温'"));
+        let c=JSON.parse(JSON.stringify(b).replace(/heartRate/g,"'心率'"));
+        let d=JSON.parse(JSON.stringify(c).replace(/bloodPresure/g,"'血压'"));
+        this.chartData2.rows=d;
+        console.log(d,"数据是2")
+        // this.$nextTick(()=>{
+        //   this.chartData2=this.chartData2.map(item=>{
+        //     return item
+        //   })
+        // })
       })
     }
   }

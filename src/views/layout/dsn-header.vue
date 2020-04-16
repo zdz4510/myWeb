@@ -15,12 +15,12 @@
           width="300"
           trigger="click"
         >
-          <el-badge  slot="reference" :value="9" :max="99">
+          <!-- <el-badge  slot="reference" :value="9" :max="99">
             <i class="el-icon-bell"></i>
-          </el-badge>
+          </el-badge> -->
 
           <!-- 弹框内容 -->
-          <div>
+          <!-- <div>
             <el-tabs v-model="activeName" @tab-click="handleClickMessage">
               <el-tab-pane label="通知（1）" name="first">用户管理</el-tab-pane>
               <el-tab-pane label="关注（2）" name="second">
@@ -43,7 +43,7 @@
               </el-tab-pane>
               <el-tab-pane label="待办（2）" name="third">角色管理</el-tab-pane>
             </el-tabs>
-          </div>
+          </div> -->
         </el-popover>
       </div>
 
@@ -55,24 +55,12 @@
               src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
             ></el-avatar>
             <span class="user-name">
-              张三
+              {{myName}}
             </span>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item> <i class="el-icon-setting"></i> 设置</el-dropdown-item>
-            <el-dropdown-item divided><i class="el-icon-setting"></i>  退出登陆</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </div>
-
-      <div class="right-item">
-        <el-dropdown>
-          <span class="el-dropdown-link">
-            <i class="el-icon-picture-outline-round"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>简体中文</el-dropdown-item>
-            <el-dropdown-item divided>English</el-dropdown-item>
+            <!-- <el-dropdown-item> <i class="el-icon-setting"></i> 设置</el-dropdown-item> -->
+            <el-dropdown-item divided @click.native="handlerLoginOut"><i class="el-icon-setting"></i>  退出登陆</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -112,10 +100,26 @@
         </div>
       </el-drawer>
     </div>
+    <el-dialog
+        title="退出"
+        :visible.sync="loginOutDialogVisible"
+        :modal-append-to-body="true"
+        :append-to-body="true"
+        width="400px"
+        :show-close="false"
+      >
+        <p>您确定退出登录当前账户吗?</p>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="loginOutDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="loginOut()">确 定</el-button>
+        </span>
+      </el-dialog>
   </div>
 </template>
 
 <script>
+import { clearToken, toLogin } from "@/until/action";
+import { mapGetters} from "vuex";
 export default {
   name: "dsnHeader",
   data() {
@@ -134,13 +138,29 @@ export default {
         // {circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'},
         // {circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'},
         // {circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'},
-      ]
+      ],
+      myName:"",
+      loginOutDialogVisible:false
     };
   },
+  computed:{
+    ...mapGetters(["user"]),
+  },
   created() {
-    console.log(this.$route);
+    this.myName=this.user.username;
+    // console.log(this.$route,this.user);
   },
   methods: {
+    handlerLoginOut(){
+      this.loginOutDialogVisible=true;
+    },
+    loginOut(){
+      this.loginOutDialogVisible = false;
+      // console.log(this.$router.options,"111222")
+      clearToken();
+      toLogin();
+
+    },
     handleCloseOrOpen() {
       this.isOpen = !this.isOpen;
       this.$emit("handleCloseOrOpen");
