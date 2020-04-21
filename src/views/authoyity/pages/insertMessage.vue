@@ -3,7 +3,7 @@
   <div id="insertMessage">
     <div class="top-info">
       <el-form :inline="true" ref="formInline"  class="demo-form-inline">
-        <el-form-item label="心率：">
+        <!-- <el-form-item label="心率：">
           <el-input
             type="number"
             v-model="formInline.heartRate"
@@ -23,7 +23,7 @@
             v-model="formInline.templature"
             placeholder="请输入体温(华摄氏度)"
           ></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="自我感觉：">
           <el-select v-model="formInline.fell" placeholder="请选择">
             <el-option
@@ -42,7 +42,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="handlerQuery('query')">查询</el-button>
+            <el-button type="primary" @click="handlerQueryThis('query')">查询</el-button>
             <el-button type="primary">重置</el-button>
             <el-button type="success" @click="handlerAdd">新增</el-button>
         </el-form-item>
@@ -169,7 +169,7 @@
 </template>
 
 <script>
-import {findMessageByMessage,deleteInsertMessage,addInsertMessage,updateInsertMessage} from "../api/insertMessage.api"
+import {findMessageByMessage,deleteInsertMessage,addInsertMessage,updateInsertMessage,getInsertMessageListByThis} from "../api/insertMessage.api"
 import { mapGetters, mapMutations } from "vuex";
 import moment from "moment"
 export default {
@@ -254,9 +254,34 @@ export default {
     ...mapGetters(["user"]),
   },
   created() {
-    
+    // 查询所有
+    this.handlerQuery();
   },
   methods: {
+    handlerQueryThis(){
+      console.log(this.formInline.fell,this.formInline.dateTime,"111")
+      let obj={
+        id:this.$cookies.get("mcs.id"),
+        dateTime:moment(this.formInline.dateTime).format("YYYY-MM-DD"),
+        fell:this.formInline.fell
+      }
+      getInsertMessageListByThis(obj).then(data=>{
+        let res=data;
+        if(res.data.code==200){
+          console.log(res.data.data)
+          this.$message({
+            message: "查询成功",
+            type: "success"
+          });
+        }else{
+          this.$message({
+              message: res,
+              type: "error"
+            });
+        }
+        
+      })
+    },
     //新增操作
     handlerAdd(){
       this.addDialog=true;  //弹框显示

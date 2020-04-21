@@ -37,6 +37,11 @@
       <template slot="title">
         <i class="el-icon-location"></i>
       </template>
+      <router-link to="/base/myHealth">
+        <el-menu-item index="2">
+          <span slot="title">个人健康图表</span>
+        </el-menu-item>
+      </router-link>
       <router-link to="/base/insertMessage">
         <el-menu-item index="1">
           <span slot="title">数据采集管理</span>
@@ -47,11 +52,7 @@
           <span slot="title">心理测试</span>
         </el-menu-item>
       </router-link>
-      <router-link to="/base/myHealth">
-        <el-menu-item index="2">
-          <span slot="title">个人健康管理</span>
-        </el-menu-item>
-      </router-link>
+      
       <router-link to="/base/myHabit">
         <el-menu-item index="3">
           <span slot="title">运动饮食管理</span>

@@ -142,18 +142,6 @@
             v-model="editForm.status"
             placeholder=""
           ></el-input>
-          <!-- <el-select v-model="editForm.status" placeholder="请选择">
-            <el-option
-            key="1"
-            label="是"
-            value="editForm.status">
-            </el-option>
-            <el-option
-            key="2"
-            label="否"
-            value="editForm.status">
-            </el-option>
-          </el-select> -->
         </el-form-item>
         <el-form-item label="日期：">
           <el-date-picker
@@ -362,7 +350,6 @@ export default {
           dateTime:new Date()
         }
       } else {
-        console.log("123",this.cloneIndex)
         this.cloneEditData=_.cloneDeep(this.tableData[this.cloneIndex]);
         this.editForm=this.cloneEditData;
       }

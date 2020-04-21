@@ -21,3 +21,8 @@ export const updateInsertMessage = data => {
 export const findListInsertMessage = data => {
     return request.post(`${window.VUE_APP_URL}insert/findListInsertMessage`, data);
 };
+
+// 按条件模糊查询
+export const getInsertMessageListByThis = data => {
+    return request.post(`${window.VUE_APP_URL}insert/getInsertMessageListByThis`, data);
+};

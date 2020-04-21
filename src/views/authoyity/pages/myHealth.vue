@@ -18,12 +18,12 @@
               />
           </el-form-item>
           <el-form-item>
-                <el-button type="primary" @click="handlerQuery">查询</el-button>
+                <el-button type="primary" @click.native="handlerQuery">查询</el-button>
                 <el-button  type="primary">重置</el-button>
                 <el-button  type="primary">新增</el-button>
           </el-form-item>
           <div>
-            <ve-line :data="chartData2"></ve-line>
+            <ve-line :loading="loading" :data="chartData2"></ve-line>
           </div>
           
         </el-form>
@@ -127,7 +127,9 @@ export default {
         ]
       },
       // 多选选中行
-       radio: 3,
+       radio: 1,
+      // 不正常数量
+       number:0,
       //圆饼的样式
       chartData: {
         columns: ['状态', '天数'],
@@ -144,6 +146,7 @@ export default {
           //   { '日期': '2020/1/5', '体温': 3792, '心率': 3492, '血压': 323 },
           //   { '日期': '2020/1/6', '体温': 4593, '心率': 4293, '血压': 78 }
           // ]
+      loading:false,
       chartData2: {
           columns: ['日期', '体温', '心率', '血压'],
           rows:        [
@@ -182,31 +185,18 @@ export default {
       console.log(this.choiceTest);
       this.$router.push({ path: "myTest"});
     },
-    // eachFn( OBJ , oldStr, newStr ){
-    //   let newObj = {};
-    //   let arr = arguments[0];
-      
-    //   for( let i in arr ){
-    //     // 深拷贝
-    //     if( typeof arr[i] === 'object' ){
-    //       newObj[ i === oldStr ? newStr : i ] =  arguments.callee( OBJ, oldStr, newStr );
-    //     }else{
-    //     // 浅拷贝
-    //       newObj[ i === oldStr ? newStr : i ] = arr[i];
-    //     }
-    //   }
-      
-    //   return newBoj;
-    // },
     handlerQuery(){
+      this.loading=true;
       let id = this.$cookies.get("mcs.id");
       let data={
         startTime: moment(this.formInline.showDate[0]).format("YYYY-MM-DD"),
         endTime: moment(this.formInline.showDate[1]).format("YYYY-MM-DD"),
         id:id
       }
-      findListInsertMessage(data).then(data=>{
+      setTimeout(() =>{
+        findListInsertMessage(data).then(data=>{
         let res=data.data;
+        this.changeData(res,this.radio);
         let arr=[];
         let obj={
           dateTime:"",
@@ -221,25 +211,35 @@ export default {
           obj.bloodPresure=item.bloodPresure
           arr.push(obj);
         })
-        console.log(arr,"数据是1")
-        // arr.forEach(item=>{
-        //   item.dateTime=item.dateTime+""
-        //   item.templature=item.templature+""
-        //   item.heartRate=item.heartRate+""
-        //   item.bloodPresure=item.bloodPresure+""
-        // })
-        let a =JSON.parse(JSON.stringify(arr).replace(/dateTime/g,"'日期'"));
-        let b=JSON.parse(JSON.stringify(a).replace(/templature/g,"'体温'"));
-        let c=JSON.parse(JSON.stringify(b).replace(/heartRate/g,"'心率'"));
-        let d=JSON.parse(JSON.stringify(c).replace(/bloodPresure/g,"'血压'"));
+        let a =JSON.parse(JSON.stringify(res).replace(/dateTime/g,"日期"));
+        let b=JSON.parse(JSON.stringify(a).replace(/templature/g,"体温"));
+        let c=JSON.parse(JSON.stringify(b).replace(/heartRate/g,"心率"));
+        let d=JSON.parse(JSON.stringify(c).replace(/bloodPresure/g,"血压"));
         this.chartData2.rows=d;
-        console.log(d,"数据是2")
-        // this.$nextTick(()=>{
-        //   this.chartData2=this.chartData2.map(item=>{
-        //     return item
-        //   })
-        // })
+        this.loading=false;
       })
+      },1000);
+      
+    },
+    changeData(data,radio){
+      console.log(this.chartData.rows,"最后结果1")
+      if(radio==1){
+        let length=data.length;
+        console.log(length);
+        // data.forEach(item=>{
+        //   if(item.templature>37.3||item.templature>35.5){
+        //     this.number++;
+        //   }
+        // })
+        // let a=length-this.number;
+        // this.chartData.rows[1]={
+        //   '状态': '不正常', '天数': this.number
+        // }
+        // this.chartData.rows[0]={
+        //   '状态': '正常', '天数': a
+        // }
+        // console.log(this.chartData,"最后结果2")
+      }
     }
   }
 };
