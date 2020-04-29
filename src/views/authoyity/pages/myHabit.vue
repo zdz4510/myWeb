@@ -3,21 +3,6 @@
   <div id="myHabit">
     <div class="top-info">
       <el-form :inline="true" ref="formInline" class="demo-form-inline">
-        <!-- <el-form-item label="运动时长：">
-          <el-input
-            v-model="formInline.sportTime"
-            placeholder="请输入运动时长"
-          ></el-input>
-        </el-form-item> -->
-        <!-- <el-form-item label="饮食内容：">
-          <el-checkbox-group 
-                v-model="formInline.checkedEats">
-                <el-checkbox v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox>
-            </el-checkbox-group>
-        </el-form-item> -->
-        <!-- <el-form-item label="日期：">
-              
-          </el-form-item> -->
         <el-form-item label="日期：">
           <el-date-picker
                 v-model="formInline.dateTime"
@@ -114,36 +99,38 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="handleReset('addForm')">重 置</el-button>
-        <el-button type="primary" @click="handlerAdd">确 定</el-button>
+        <el-button type="primary" @click="handlerAdd('addForm')">确 定</el-button>
       </div>
     </el-dialog>
 
     <!-- 编辑模态框 -->
     <el-dialog title="编辑" :visible.sync="editDialog">
-      <el-form   :model="editForm" :rules="rules" :label-width="formLabelWidth">
-        <el-form-item label="运动时长：">
+      <el-form   :model="editForm" :rules="editRules" :label-width="formLabelWidth">
+        <el-form-item label="运动时长：" prop="sportTime">
           <el-input
             v-model="editForm.sportTime"
             placeholder="请输入运动时长"
           ></el-input>
         </el-form-item>
-        <el-form-item label="饮食内容：">
-          <el-input type="textArea" v-model="editForm.checkedEats" placeholder="请输入今日饮食">
-
-          </el-input>
-          <!-- <el-checkbox-group 
-                v-model="editForm.checkedEats">
-                <el-checkbox v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox>
-            </el-checkbox-group> -->
-        </el-form-item>
         <el-form-item label="运动量充足：">
-          <el-input
-            :readonly="true"
-            v-model="editForm.status"
-            placeholder=""
-          ></el-input>
+          <el-select v-model="editForm.status" :disabled="true" placeholder="请选择">
+            <el-option
+              key="1"
+              label="是"
+              value="addForm.status">
+              </el-option>
+              <el-option
+              key="2"
+              label="否"
+              value="addForm.status">
+              </el-option>
+            </el-select>
         </el-form-item>
-        <el-form-item label="日期：">
+        <el-form-item label="饮食内容:" prop="checkedEats">
+          <el-input type="textarea" v-model="editForm.checkedEats" placeholder="请输入饮食内容">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="日期：" prop="dateTime">
           <el-date-picker
              v-model="editForm.dateTime"
              type="date"
@@ -167,16 +154,18 @@ import _ from "lodash"
 export default {
   name: "myHabit",
   data() {
-    const cityOptions = ['肉类', '蔬菜', '水果', '牛奶'];
     const checkedEatsRules= (rule, value, callback) => {
-      console.log(value,"12345")
         if (!value) {
             callback("饮食内容不为空");
+        }else{
+          callback()
         }
     };
     const dateTimeRules= (rule, value, callback) => {
         if (!value) {
             callback("时间不为空");
+        }else{
+          callback()
         }
     };
     const sportTimeRules = (rule, value, callback) => {
@@ -197,8 +186,41 @@ export default {
         }
     
     };
+    const checkedEatsRules2= (rule, value, callback) => {
+        if (!value) {
+            callback("饮食内容不为空");
+        }else{
+          callback()
+        }
+    };
+    const dateTimeRules2= (rule, value, callback) => {
+        if (!value) {
+            callback("时间不为空");
+        }else{
+          callback()
+        }
+    };
+    const sportTimeRules2 = (rule, value, callback) => {
+        if (value === "") {
+            callback("下达数量不为空");
+        }
+        let reg = /^[0-9]\d*$/;
+        if (!reg.test(value)) {
+            callback("下达数量应只包含非零整数");
+        }else{
+            if(value>=30&&value<=120)
+            {
+              this.editForm.status="是"
+            }else{
+              this.editForm.status="否"
+            }
+            callback();
+        }
+    
+    };
+    let startDate = new Date();
+    startDate.setTime(startDate.getTime() - 3600 * 1000 * 24 * 7);
     return { 
-      cities: cityOptions,
       addDialog:false,
       editForm: {
           sportTime:"",
@@ -215,7 +237,7 @@ export default {
         dateTime:new Date()
       },
       formInline:{
-          dateTime:""
+          dateTime:[startDate, new Date()]
       },
       pickerOptions: {
         shortcuts: [
@@ -248,54 +270,26 @@ export default {
           }
         ]
       },
-      tableData: [
-        {
-          id: 1,
-          dateTime: "2016-05-02",
-          name: "王小虎",
-          checkedEats: ['肉类', '蔬菜'],
-          sportTime:"40",
-          status:false,
-        },
-        {
-          id: 2,
-          dateTime: "2016-05-02",
-          name: "王小虎",
-          checkedEats: ['肉类', '蔬菜'],
-          sportTime:"40",
-          status:false,
-        },
-        {
-          id: 3,
-          dateTime: "2016-05-01",
-          name: "王小虎",
-          checkedEats: ['肉类', '蔬菜'],
-          sportTime:"40",
-          status:false,
-        },
-        {
-          id: 4,
-          date: "2016-05-03",
-          name: "王小虎",
-          checkedEats: ['肉类', '蔬菜'],
-          sportTime:"40",
-          status:false,
-        }
-      ],
+      tableData: [],
       formLabelWidth: "120px",
       editDialog: false,
       rules: {},
       addRules:{
-        sportTime: [{ required: true, validator: sportTimeRules, trigger: "blur" }],
-        checkedEats: [{ required: true, validator: checkedEatsRules, trigger: "blur" }],
-        dateTime: [{ required: true, validator: dateTimeRules, trigger: "blur" }],
+        sportTime: [{ required: true, validator: sportTimeRules, trigger: "change" }],
+        checkedEats: [{ required: true, validator: checkedEatsRules, trigger: "change" }],
+        dateTime: [{ required: true, validator: dateTimeRules, trigger: "change" }],
+      },
+      editRules:{
+        sportTime: [{ required: true, validator: sportTimeRules2, trigger: "change" }],
+        checkedEats: [{ required: true, validator: checkedEatsRules2, trigger: "change" }],
+        dateTime: [{ required: true, validator: dateTimeRules2, trigger: "change" }],
       },
       cloneEditData:{},
       cloneIndex:""
     };
   },
   created(){
-    // this.handlerQuery();
+    this.handlerQueryTime();
   },
   methods: {
     // 查询全部
@@ -309,10 +303,6 @@ export default {
       findAllHabit(obj).then(data=>{
         let res=data;
         if(res.data.code==200){
-          // this.$message({
-          //     message: "查询成功",
-          //   type: "success"
-          // });
           this.tableData=res.data.data;
         }
       })
@@ -321,8 +311,8 @@ export default {
     // 查询全部
     handlerQueryTime(){
       let obj={
-        startTime:this.formInline.dateTime[0],
-        endTime:this.formInline.dateTime[1],
+        startTime:moment(this.formInline.dateTime[0]).format("YYYY-MM-DD"),
+        endTime:moment(this.formInline.dateTime[1]).format("YYYY-MM-DD"),
         id:this.$cookies.get("mcs.id")
       }
       findAllHabitByTime(obj).then(data=>{
@@ -355,24 +345,33 @@ export default {
       }
     },
     handlerAdd(){
-      this.addForm.id=this.$cookies.get("mcs.id");
-      this.addForm.dateTime=moment(this.addForm.dateTime).format("YYYY-MM-DD")
-      addHabit(this.addForm).then(data=>{
-        let res=data;
-        this.addDialog=false;
-        if(res.data.code==200){
-          this.$message({
-              message: "新增成功",
-            type: "success"
-          });
-          this.handlerQuery();
-        }else{
-          this.$message({
-              message: res.data.message,
-            type: "error"
-          });
+      console.log(this.$refs["addForm"],"1111")
+      this.$refs["addForm"].validate((valid) => {
+        console.log(valid,"222")
+        if (valid) {
+          this.addForm.id=this.$cookies.get("mcs.id");
+          this.addForm.dateTime=moment(this.addForm.dateTime).format("YYYY-MM-DD")
+          addHabit(this.addForm).then(data=>{
+            let res=data;
+            this.addDialog=false;
+            if(res.data.code==200){
+              this.$message({
+                  message: "新增成功",
+                type: "success"
+              });
+              this.handlerQuery();
+            }else{
+              this.$message({
+                  message: res.data.message,
+                type: "error"
+              });
+            }
+          })
+        } else {
+          return false;
         }
-      })
+      });
+      
     },
     handleEdit(index, row) {
         this.editDialog=true;

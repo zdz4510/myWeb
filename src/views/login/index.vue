@@ -87,17 +87,15 @@ export default {
     submitCheckForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          // this.$router.push("/welcome");
           userAdd(this.loginForm).then(res => {
             if(res.data.code==200){
               const result = res.data;
               this.dialogVisible=true;
               this.USER(this.loginForm);
-              // this.$cookies.set("mcs.sessionId", result.data, { expires: "8h" });
             }else{
               this.$message({
                  message: res.data.message,
-                type: "warning"
+                type: "error"
               });
             }
           });
@@ -117,11 +115,11 @@ export default {
               this.$cookies.set("mcs.sessionId", result.data.token, { expires: "8h" });
               this.$cookies.set("mcs.id", result.data.id, { expires: "8h" });
               this.USER({...this.loginForm,id:result.data.id});
-              this.$router.push("/welcome");
+              this.$router.push("/base/myHealth");
             }else{
               this.$message({
                  message: res.data.message,
-                type: "warning"
+                type: "error"
               });
             }
           });
@@ -137,6 +135,7 @@ export default {
 
 <style lang="scss">
 .bglogin {
+  height: 100%;
   .el-form-item__label {
     color: #fff;
   }
@@ -150,14 +149,13 @@ export default {
     display: flex;
   }
   .loginForm {
-    width: 50%;
-    height: 250px;
-    padding: 2%;
-    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+    // margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: #515a6e;
   }
 }
 </style>

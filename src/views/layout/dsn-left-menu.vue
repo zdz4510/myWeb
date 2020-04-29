@@ -5,29 +5,6 @@
         <img src="@/assets/logo.7b8cc895.png" />
       </div>
     </div>
-    <!-- <el-menu
-      :collapse-transition="false"
-      :router="true"
-      background-color="#515a6e"
-      active-text-color="hsla(0,0%,100%,1)"
-      text-color="hsla(0,0%,100%,0.7)"
-      default-active="1-4-1"
-      class="el-menu-vertical-demo"
-      @open="handleOpen"
-      @close="handleClose"
-      :collapse="!isCollapse"
-    >
-
-       <el-submenu  :index="item.id" :key="item.id" v-for="item in list">
-        <template slot="title">
-          <i class="el-icon-location"></i>
-          <span slot="title">{{item.lable}}</span>
-        </template>
-         <el-menu-item   :route="{
-            name:subitem.key
-         }"  :key="subitem.id"  v-for="subitem in item.children"   :index="subitem.id">{{subitem.lable}}</el-menu-item>
-       </el-submenu>
-    </el-menu> -->
      <el-menu
       default-active="2"
       class="el-menu-vertical-demo"
@@ -44,7 +21,7 @@
       </router-link>
       <router-link to="/base/insertMessage">
         <el-menu-item index="1">
-          <span slot="title">数据采集管理</span>
+          <span slot="title">个人健康数据</span>
         </el-menu-item>
       </router-link>
       <router-link to="/base/myTest">
@@ -55,7 +32,7 @@
       
       <router-link to="/base/myHabit">
         <el-menu-item index="3">
-          <span slot="title">运动饮食管理</span>
+          <span slot="title">运动饮食</span>
         </el-menu-item>
       </router-link>
       <router-link to="/base/myFamily">

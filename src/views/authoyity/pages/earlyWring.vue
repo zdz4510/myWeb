@@ -52,7 +52,6 @@
 
     <el-table
       ref="multipleTable"
-      row-key="id"
       border
       :data="tableData"
       tooltip-effect="dark"
@@ -134,8 +133,8 @@ export default {
         id:"",
         warnId:"",
         warnTime:new Date(),
-        warnType:"",
-        warnStatus:""
+        warnType:"体温异常",
+        warnStatus:"未处理"
       },
       warnTypeList:[{
           value: '心率异常',
@@ -245,7 +244,7 @@ export default {
         if(res.data.code==200){
           this.$message({
               message: "查询成功",
-            type: "success"
+              type: "success"
           });
           this.tableData=res.data.data;
         }else{
@@ -262,8 +261,8 @@ export default {
       this.formInline={
         id:"",
         warnTime:new Date(),
-        warnType:"",
-        warnStatus:""
+        warnType:"体温异常",
+        warnStatus:"未处理"
       }
       this.handlerQuery();
     },

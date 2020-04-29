@@ -2,28 +2,7 @@
   <!-- liaojunjie 2019年12月17日14:56:35 -->
   <div id="insertMessage">
     <div class="top-info">
-      <el-form :inline="true" ref="formInline"  class="demo-form-inline">
-        <!-- <el-form-item label="心率：">
-          <el-input
-            type="number"
-            v-model="formInline.heartRate"
-            placeholder="请输入心率"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="血压：">
-          <el-input
-            type="number"
-            v-model="formInline.bloodPresure"
-            placeholder="请输入血压"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="体温：">
-          <el-input
-            type="number"
-            v-model="formInline.templature"
-            placeholder="请输入体温(华摄氏度)"
-          ></el-input>
-        </el-form-item> -->
+      <el-form :inline="true" ref="formInline" :model="formInline" class="demo-form-inline">
         <el-form-item label="自我感觉：">
           <el-select v-model="formInline.fell" placeholder="请选择">
             <el-option
@@ -36,14 +15,20 @@
         </el-form-item>
         <el-form-item label="日期：" prop="dateTime">
           <el-date-picker
-             v-model="formInline.dateTime"
-             type="date"
-             placeholder="选择日期时间">
-          </el-date-picker>
+            v-model="formInline.dateTime"
+            type="daterange"
+            range-separator="-"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            value-format="yyyy-MM-dd"
+            unlink-panels
+            :picker-options="pickerOptions"
+            style="width:270px"
+          />
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="handlerQueryThis('query')">查询</el-button>
-            <el-button type="primary">重置</el-button>
+            <el-button type="primary" @click="handlerReset">重置</el-button>
             <el-button type="success" @click="handlerAdd">新增</el-button>
         </el-form-item>
       </el-form>
@@ -175,6 +160,8 @@ import moment from "moment"
 export default {
   name: "list",
   data() {
+    let startDate = new Date();
+    startDate.setTime(startDate.getTime() - 3600 * 1000 * 24 * 7);
     return { 
       editForm: {
           id:"",
@@ -199,8 +186,38 @@ export default {
           bloodPresure:"",
           heartRate:"",
           fell:"良好", // 默认自我感觉良好
-          dateTime:new Date()
-          
+          dateTime: [startDate, new Date()]
+      },
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: "最近一周",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近一个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近三个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit("pick", [start, end]);
+            }
+          }
+        ]
       },
       // 自我感觉下拉框
       fellList:[{
@@ -245,7 +262,7 @@ export default {
       num:"",
       rules: {
         dateTime: [
-          { message: "日期必填", required: true, trigger: "blur" }
+          { message: "日期必填", required: true, trigger: "change" }
         ],
       }
     };
@@ -255,32 +272,51 @@ export default {
   },
   created() {
     // 查询所有
-    this.handlerQuery();
+    this.handlerQueryThis();
   },
   methods: {
-    handlerQueryThis(){
-      console.log(this.formInline.fell,this.formInline.dateTime,"111")
-      let obj={
-        id:this.$cookies.get("mcs.id"),
-        dateTime:moment(this.formInline.dateTime).format("YYYY-MM-DD"),
-        fell:this.formInline.fell
+    handlerReset(){
+      let startDate = new Date();
+      startDate.setTime(startDate.getTime() - 3600 * 1000 * 24 * 7);
+      this.formInline={
+        templature:"",
+        bloodPresure:"",
+        heartRate:"",
+        fell:"良好", // 默认自我感觉良好
+        dateTime:[startDate, new Date()]
       }
-      getInsertMessageListByThis(obj).then(data=>{
-        let res=data;
-        if(res.data.code==200){
-          console.log(res.data.data)
-          this.$message({
-            message: "查询成功",
-            type: "success"
-          });
-        }else{
-          this.$message({
-              message: res,
-              type: "error"
-            });
+      this.handlerQueryThis();
+    },
+    handlerQueryThis(){
+      this.$refs["formInline"].validate((valid) => {
+        if (valid) {
+          let obj={
+            id:this.$cookies.get("mcs.id"),
+            startTime: moment(this.formInline.dateTime[0]).format("YYYY-MM-DD"),
+            endTime: moment(this.formInline.dateTime[1]).format("YYYY-MM-DD"),
+            fell:this.formInline.fell
+          }
+          getInsertMessageListByThis(obj).then(data=>{
+            let res=data;
+            if(res.data.code==200){
+              this.$message({
+                message: "查询成功",
+                type: "success"
+              });
+              this.tableData=res.data.data;
+            }else{
+              this.$message({
+                  message: res,
+                  type: "error"
+                });
+            }
+            
+          })
+        } else {
+          return false;
         }
-        
-      })
+      });
+      
     },
     //新增操作
     handlerAdd(){
@@ -304,7 +340,6 @@ export default {
                  message: res.data.data,
                 type: "success"
               });
-              this.handlerQuery();
               this.$refs["addForm"].resetFields();
             }
             else{
@@ -332,7 +367,7 @@ export default {
                  message: res.data.data,
                 type: "success"
               });
-              this.handlerQuery();
+              // this.handlerQueryThis();
               this.$refs["editForm"].resetFields();
             }else{
               this.$message({
@@ -359,33 +394,9 @@ export default {
                 type: "success"
               });
             }
-            this.handlerQuery();
+            this.handlerQueryThis();
           })
     },
-    handlerQuery(val){
-          let id = this.$cookies.get("mcs.id");
-          this.formInline.dateTime=moment(this.formInline.dateTime).format("YYYY-MM-DD")
-          let data={...this.formInline,id}
-            findMessageByMessage(data).then(data=>{
-            let res=data;
-            if(res.data.code==200){
-              this.tableData=res.data.data;
-              this.num=this.tableData.length+1;
-              if(val=="query"){
-                this.$message({
-                  message: "查询成功",
-                  type: "success"
-                });
-              }
-            }else{
-              this.$message({
-                  message: res.data.data,
-                  type: "error"
-                });
-            }
-            
-          })
-    }
   }
 };
 </script>

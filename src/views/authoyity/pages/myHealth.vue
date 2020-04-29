@@ -19,8 +19,7 @@
           </el-form-item>
           <el-form-item>
                 <el-button type="primary" @click.native="handlerQuery">查询</el-button>
-                <el-button  type="primary">重置</el-button>
-                <el-button  type="primary">新增</el-button>
+                <el-button  type="primary" @click.native="handlerReset">重置</el-button>
           </el-form-item>
           <div>
             <ve-line :loading="loading" :data="chartData2"></ve-line>
@@ -84,6 +83,7 @@
 </template>
 
 <script>
+import _ from "lodash";
 import moment from "moment"
 import {findListInsertMessage} from "../api/insertMessage.api"
 export default {
@@ -132,35 +132,30 @@ export default {
        number:0,
       //圆饼的样式
       chartData: {
-        columns: ['状态', '天数'],
+        columns: ['name', 'num'],
         rows: [
-          { '状态': '正常', '天数': 1393 },
-          { '状态': '不正常', '天数': 3530 },
+          { name: '正常', num: 0 },
+          { name: '不正常', num: 0 },
         ]
       },
-          // [
-          //   { '日期': '2020/1/1', '体温': 1393, '心率': 1093, '血压': 32 },
-          //   { '日期': '2020/1/2', '体温': 3530, '心率': 3230, '血压': 26 },
-          //   { '日期': '2020/1/3', '体温': 2923, '心率': 2623, '血压': 76 },
-          //   { '日期': '2020/1/4', '体温': 1723, '心率': 1423, '血压': 49 },
-          //   { '日期': '2020/1/5', '体温': 3792, '心率': 3492, '血压': 323 },
-          //   { '日期': '2020/1/6', '体温': 4593, '心率': 4293, '血压': 78 }
-          // ]
+      number1:0,
+      number2:0,
       loading:false,
       chartData2: {
           columns: ['日期', '体温', '心率', '血压'],
           rows:        [
-            { '日期': '2020/1/1', '体温': 1393, '心率': 1093, '血压': 32 },
-            { '日期': '2020/1/2', '体温': 3530, '心率': 3230, '血压': 26 },
-            { '日期': '2020/1/3', '体温': 2923, '心率': 2623, '血压': 76 },
-            { '日期': '2020/1/4', '体温': 1723, '心率': 1423, '血压': 49 },
-            { '日期': '2020/1/5', '体温': 3792, '心率': 3492, '血压': 323 },
-            { '日期': '2020/1/6', '体温': 4593, '心率': 4293, '血压': 78 }
+            // { '日期': '2020/1/1', '体温': 1393, '心率': 1093, '血压': 32 },
+            // { '日期': '2020/1/2', '体温': 3530, '心率': 3230, '血压': 26 },
+            // { '日期': '2020/1/3', '体温': 2923, '心率': 2623, '血压': 76 },
+            // { '日期': '2020/1/4', '体温': 1723, '心率': 1423, '血压': 49 },
+            // { '日期': '2020/1/5', '体温': 3792, '心率': 3492, '血压': 323 },
+            // { '日期': '2020/1/6', '体温': 4593, '心率': 4293, '血压': 78 }
           ]
       },
       chartData2Arr:[],
       // 单选是否进行心里测试
-      choiceTest:false
+      choiceTest:false,
+      cloneData:[],
     };
   },
   watch:{
@@ -168,22 +163,40 @@ export default {
       this.changePieData(this.radio);
     }
   },
+  created(){
+    this.handlerQuery();
+  },
   methods: {
     // 选中哪个就显示哪个数据
     changePieData(val){
-      console.log(val,"选中的是");
-      this.chartData={
-        columns: ['状态', '天数'],
-        rows: [
-          { '状态': '正常', '天数':3 },
-          { '状态': '不正常', '天数': 4 },
-        ]
+      if(this.cloneData.length>0){
+        this.changeData(this.cloneData,this.radio)
+      }else{
+        this.$message({
+            message: "请先查询",
+            type: "warning"
+          });
       }
+      
+      // this.chartData={
+      //   columns: ['状态', '天数'],
+      //   rows: [
+      //     { '状态': '正常', '天数':3 },
+      //     { '状态': '不正常', '天数': 4 },
+      //   ]
+      // }
     },
     // 复选改变时
     handlerTest(){
-      console.log(this.choiceTest);
       this.$router.push({ path: "myTest"});
+    },
+    handlerReset(){
+      let startDate = new Date();
+      startDate.setTime(startDate.getTime() - 3600 * 1000 * 24 * 7);
+      this.formInline={
+          showDate:[startDate, new Date()]
+        }
+      this.handlerQuery();
     },
     handlerQuery(){
       this.loading=true;
@@ -196,6 +209,7 @@ export default {
       setTimeout(() =>{
         findListInsertMessage(data).then(data=>{
         let res=data.data;
+        this.cloneData=_.cloneDeep(res);
         this.changeData(res,this.radio);
         let arr=[];
         let obj={
@@ -222,23 +236,97 @@ export default {
       
     },
     changeData(data,radio){
-      console.log(this.chartData.rows,"最后结果1")
       if(radio==1){
         let length=data.length;
-        console.log(length);
-        // data.forEach(item=>{
-        //   if(item.templature>37.3||item.templature>35.5){
-        //     this.number++;
-        //   }
-        // })
-        // let a=length-this.number;
-        // this.chartData.rows[1]={
-        //   '状态': '不正常', '天数': this.number
-        // }
-        // this.chartData.rows[0]={
-        //   '状态': '正常', '天数': a
-        // }
-        // console.log(this.chartData,"最后结果2")
+        this.number2=0;
+        data.forEach(item=>{
+          if(item.templature>37.3||item.templature<35.5){
+            this.number2++;
+          }
+        })
+        this.number1=length-this.number2;
+        const { rows } = this.chartData;
+        rows.forEach((item) => {
+          if (item.name === "正常") {
+            item.num = this.number1;
+          }
+          if (item.name === "不正常") {
+            item.num = this.number2;
+          }
+        });
+        this.chartData={
+          ...this.chartData,
+          rows
+        }
+      }
+      if(radio==2){
+        let length=data.length;
+        this.number2=0;
+        data.forEach(item=>{
+          if(item.bloodPresure>140||item.templature<90){
+            this.number2++;
+          }
+        })
+        this.number1=length-this.number2;
+        const { rows } = this.chartData;
+        rows.forEach((item) => {
+          if (item.name === "正常") {
+            item.num = this.number1;
+          }
+          if (item.name === "不正常") {
+            item.num = this.number2;
+          }
+        });
+        this.chartData={
+          ...this.chartData,
+          rows
+        }
+      }
+      if(radio==3){
+        let length=data.length;
+        this.number2=0;
+        data.forEach(item=>{
+          if(item.heartRate>140||item.heartRate<90){
+            this.number2++;
+          }
+        })
+        this.number1=length-this.number2;
+        const { rows } = this.chartData;
+        rows.forEach((item) => {
+          if (item.name === "正常") {
+            item.num = this.number1;
+          }
+          if (item.name === "不正常") {
+            item.num = this.number2;
+          }
+        });
+        this.chartData={
+          ...this.chartData,
+          rows
+        }
+      }
+      if(radio==4){
+        let length=data.length;
+        this.number2=0;
+        data.forEach(item=>{
+          if(item.fell=="糟糕"){
+            this.number2++;
+          }
+        })
+        this.number1=length-this.number2;
+        const { rows } = this.chartData;
+        rows.forEach((item) => {
+          if (item.name === "正常") {
+            item.num = this.number1;
+          }
+          if (item.name === "不正常") {
+            item.num = this.number2;
+          }
+        });
+        this.chartData={
+          ...this.chartData,
+          rows
+        }
       }
     }
   }
