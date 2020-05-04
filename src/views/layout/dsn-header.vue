@@ -15,35 +15,44 @@
           width="300"
           trigger="click"
         >
-          <!-- <el-badge  slot="reference" :value="9" :max="99">
+          <el-badge  slot="reference" :value="this.message1.length+this.message2.length" :max="99">
             <i class="el-icon-bell"></i>
-          </el-badge> -->
+          </el-badge>
 
           <!-- 弹框内容 -->
-          <!-- <div>
+          <div>
             <el-tabs v-model="activeName" @tab-click="handleClickMessage">
-              <el-tab-pane label="通知（1）" name="first">用户管理</el-tab-pane>
-              <el-tab-pane label="关注（2）" name="second">
+              <el-tab-pane label="已发送" name="first">
                 <div class="message_wrap">
                   <div class="message_list">
-                    <div class="message_item" v-for="(item, index) in message" :key="index">
-                      <el-avatar size="medium" :src="item.circleUrl"></el-avatar>
+                    <div class="message_item" v-for="(item, index) in message1" :key="index">
+                      <span>{{index+1}}</span>
                       <div class="message_item-right">
-                        <h4>蒂姆·库克回复了你的邮件 </h4>
-                        <span>05-08 14:33</span>
+                        请求{{item.carename}}确认与我的关系为:{{item.relation}}，并成为我的关联关联用户
                       </div>
                     </div>
                   </div>
-                  <div class="text-center">
-                    <el-button class="btn-clear" type="text">
-                      <i class="el-icon-delete"></i> <span>清空关注</span>
-                    </el-button>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="待确认" name="second">
+                <div class="message_wrap" v-show="message2.length>0"  v-for="(item, index) in message2" :key="item.relationId">
+                  <div class="message_list">
+                    <div class="message_item">
+                      <span>{{index+1}}</span>
+                      <div class="message_item-right">
+                        {{item.carename}}想确认与我的关系为:{{item.relation}}，并将我设置为他的关联用户
+                      </div>
+                      <div class="text-center">
+                        <el-button class="btn-clear" @click="handlerSure(item)" type="text">
+                          <span>确认</span>
+                        </el-button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </el-tab-pane>
-              <el-tab-pane label="待办（2）" name="third">角色管理</el-tab-pane>
             </el-tabs>
-          </div> -->
+          </div>
         </el-popover>
       </div>
 
@@ -59,7 +68,7 @@
             </span>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <!-- <el-dropdown-item> <i class="el-icon-setting"></i> 设置</el-dropdown-item> -->
+            <el-dropdown-item @click.native="handlerBtnShow"> <i class="el-icon-setting"></i>个人信息</el-dropdown-item>
             <el-dropdown-item divided @click.native="handlerLoginOut"><i class="el-icon-setting"></i>  退出登陆</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -101,35 +110,105 @@
       </el-drawer>
     </div>
     <el-dialog
-        title="退出"
-        :visible.sync="loginOutDialogVisible"
-        :modal-append-to-body="true"
-        :append-to-body="true"
-        width="400px"
-        :show-close="false"
-      >
-        <p>您确定退出登录当前账户吗?</p>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="loginOutDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="loginOut()">确 定</el-button>
-        </span>
-      </el-dialog>
+      title="退出"
+      :visible.sync="loginOutDialogVisible"
+      :modal-append-to-body="true"
+      :append-to-body="true"
+      width="400px"
+      :show-close="false"
+    >
+      <p>您确定退出登录当前账户吗?</p>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="loginOutDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="loginOut()">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 编辑模态框 -->
+    <el-dialog title="编辑" :visible.sync="editDialog">
+      <el-form ref="headheadeditForm" :model="headeditForm" :rules="editRules" :label-width="formLabelWidth">
+        <el-form-item
+            label="用户名:"
+            prop="username"
+          >
+            <el-input :disabled="visableBtn"  v-model="headeditForm.username" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item
+            label="真实姓名:"
+            prop="realName"
+          >
+            <el-input :disabled="visableBtn"  v-model="headeditForm.realName" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item
+            label="年龄:"
+            prop="age"
+          >
+            <el-input :disabled="visableBtn" v-model="headeditForm.age" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item
+            label="电话:"
+            prop="iphone"
+          >
+            <el-input :disabled="visableBtn" v-model="headeditForm.iphone" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item
+            label="紧急联系人:"
+            prop="emergencyContact"
+          >
+            <el-input :disabled="visableBtn"  v-model="headeditForm.emergencyContact" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item
+            label="紧急联系人电话:"
+            prop="emergencyContactIphone"
+          >
+            <el-input :disabled="visableBtn"  v-model="headeditForm.emergencyContactIphone" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item
+            label="家庭住址:"
+            prop="address"
+          >
+            <el-input :disabled="visableBtn" v-model="headeditForm.address" autocomplete="off"></el-input>
+          </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="handleReset('headeditForm')">重 置</el-button>
+        <el-button @click="handleEdit">编辑</el-button>
+        <el-button type="primary" @click="handleEditSure('headheadeditForm')">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { clearToken, toLogin } from "@/until/action";
+import {getUserRelationMessage,getUserRelationMessageCare,updateUserRelationMessageCare} from "../authoyity/api/myFamily.api"
+import {userInfo,updateUserInfo} from "../authoyity/api/myInfo.api"
 import { mapGetters} from "vuex";
+import _ from "lodash"
 export default {
   name: "dsnHeader",
   data() {
+      const iphoneRule = (rule, value, callback) => {
+      let reg=/^1[3456789]\d{9}$/;
+      if(value==""){
+        callback(new Error("手机号不为空"));
+      }
+      else if (!reg.test(value)) {
+        callback(new Error("手机号有误"));
+      } else {
+        callback();
+      }
+    };
+    // if(!(/^1[3456789]\d{9}$/.test(phone))){ 
+    //     alert("手机号码有误，请重填");  
+    //     return false; 
+    // } 
     return {
       isOpen: true,
       drawer: false, // 右侧更多
       Theme: 1, // 皮肤
       headerValue1: true,
       headerValue2: true,
-      activeName: 'second', // 消息tab
+      activeName: 'first', // 消息tab
       message: [
         {circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'},
         {circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'},
@@ -140,23 +219,121 @@ export default {
         // {circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'},
       ],
       myName:"",
-      loginOutDialogVisible:false
+      loginOutDialogVisible:false,
+      message1:[],
+      message2:[],
+      editDialog:false,
+      visableBtn:true,
+      formLabelWidth:"120px",
+      cloneUserMessage:{},
+      headeditForm:{
+        realName:"",
+        username:"",
+        age: "",
+        headImg:"",
+        iphone:"",
+        address:"",
+        emergencyContact:"",
+        emergencyContactIphone:"",
+        picture:""
+      },
+      editRules:{
+        real_name:[
+              { required: true, message: '真实姓名不能为空',trigger: "blur"},
+            ],
+        username:[
+              { required: true, message: '用户名不能为空',trigger: "blur"},
+            ],
+        age: [
+              { required: true, message: '年龄不能为空',trigger: "blur"}
+            ],
+        iphone:[
+              { required: true, validator: iphoneRule,trigger: "change"},
+            ],
+        address:[
+              { required: true, message: '家庭住址不能为空',trigger: "blur"},
+            ],
+        emergencyContact:[
+              { required: true, message: '紧急联系人不能为空',trigger: "blur"},
+            ],
+        emergencyContactIphone:[
+              { required: true, message: '紧急联系人电话不能为空',trigger: "blur"},
+            ],
+        
+      }
     };
   },
   computed:{
     ...mapGetters(["user"]),
   },
+  mounted() {
+    this.query();
+    this.timer = setInterval(this.query, 60000);
+  },
+  beforeDestroy() {
+    clearInterval(this.timer);
+  },
   created() {
     this.myName=this.user.username;
-    // console.log(this.$route,this.user);
+    this.query();
+    this.number=this.message1.length+this.message2.length;
   },
   methods: {
+    handlerBtnShow(){
+      this.editDialog=true;
+      userInfo(this.user).then(data=>{
+        const res=data;
+        this.headeditForm= {
+          username:res.data.data.username,
+          age: res.data.data.age,
+          headImg:res.data.data.headImg,
+          iphone:res.data.data.iphone,
+          address:res.data.data.address,
+          emergencyContact:res.data.data.emergencyContact,
+          emergencyContactIphone:res.data.data.emergencyContactIphone,
+          realName:res.data.data.realName
+        }
+        this.cloneUserMessage=_.cloneDeep(res.data.data);
+      })
+    },
+    handleReset(){
+      this.headeditForm=this.cloneUserMessage;
+    },
+    handleEditSure(formName){
+      this.$refs[formName].validate((valid) => {
+          if (valid) {
+            // alert('submit!');
+            let obj={
+              ...this.editForm
+            }
+            updateUserInfo(obj).then(data=>{
+            let res=data;
+            if(res.data.code==200){
+              this.$message({
+                 message: "修改成功",
+                type: "success"
+              });
+            }
+            console.log("2222",res.data);
+          })
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+    },
+    handleEdit(){
+      this.visableBtn=false;
+    },
+    query(){
+      this.handlerQuery();
+      this.handlerQueryCare();
+    },
     handlerLoginOut(){
       this.loginOutDialogVisible=true;
     },
     loginOut(){
       this.loginOutDialogVisible = false;
-      // console.log(this.$router.options,"111222")
       clearToken();
       toLogin();
 
@@ -176,6 +353,66 @@ export default {
     setTheme(id) {
       console.log(id)
       this.Theme = id
+    },
+    // 查询有没有关联信息
+    handlerQuery(){
+      let obj={
+        id:this.$cookies.get("mcs.id"),
+      }
+      getUserRelationMessage(obj).then(data=>{
+        let res=data;
+        if(res.data.code==200){
+          this.message1=[];
+          res.data.data.forEach(element => {
+            if(element.send=="true"&&element.sure=="false"){
+              this.message1.push(element);
+            }
+          });
+        }else{
+          this.$message({
+            message: res.data.message,
+            type: "error"
+          });
+        }
+      })
+    },
+    handlerQueryCare(){
+      let obj={
+        careid:this.$cookies.get("mcs.id"),
+      }
+      getUserRelationMessageCare(obj).then(data=>{
+        let res=data;
+        if(res.data.code==200){
+          this.message2=[];
+          res.data.data.forEach(element => {
+            if(element.send=="true"&&element.sure=="false"){
+              this.message2.push(element);
+            }
+          });
+        }else{
+          this.$message({
+            message: res.data.message,
+            type: "error"
+          });
+        }
+      })
+    },
+    handlerSure(v){
+      let obj={
+        ...v,
+        sure:"true"
+      }
+      updateUserRelationMessageCare(obj).then(data=>{
+        let res=data;
+        if(res.data.code==200){
+          this.handlerQueryCare();
+        }else{
+          this.$message({
+            message: res.data.message,
+            type: "error"
+          });
+        }
+      })
     }
   }
 };

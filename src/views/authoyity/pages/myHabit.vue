@@ -151,6 +151,8 @@
 import {findAllHabit,findAllHabitByTime,addHabit,updateHabit,deleteHabit} from  "../api/habit.api"
 import moment from "moment"
 import _ from "lodash"
+let startDate = new Date();
+startDate.setTime(startDate.getTime() - 3600 * 1000 * 24 * 7);
 export default {
   name: "myHabit",
   data() {
@@ -218,8 +220,6 @@ export default {
         }
     
     };
-    let startDate = new Date();
-    startDate.setTime(startDate.getTime() - 3600 * 1000 * 24 * 7);
     return { 
       addDialog:false,
       editForm: {
@@ -326,8 +326,8 @@ export default {
     
     //重置
     handlerResetQuery(){
-      this.formInline.dateTime=""
-      this.handlerQuery();
+      this.formInline.dateTime=[startDate, new Date()];
+      this.handlerQueryTime();
     },
     handleReset(formName) {
       if (formName == "addForm") {

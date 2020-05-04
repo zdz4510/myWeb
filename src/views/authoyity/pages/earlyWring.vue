@@ -253,7 +253,6 @@ export default {
             type: "error"
           });
         }
-        
       })
 
     },
