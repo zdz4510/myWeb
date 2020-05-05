@@ -5,5 +5,5 @@ export const userInfo = data => {
 };
 
 export const updateUserInfo = data => {
-    return request.post(`${window.VUE_APP_URL}user/updateUserInfo`, data);
+    return request.post(`${window.VUE_APP_URL}user/updateUserMessage`, data);
 };

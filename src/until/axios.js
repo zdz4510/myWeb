@@ -8,9 +8,8 @@ axios.defaults.timeout = 60000;
 axios.interceptors.request.use(
   config => {
     config.data = qs.stringify(config.data);
-    console.log(config.url,"何时使用")
-    if(config.url==="http://blog.natapp1.cc/mcs/file/upload"){
-      config.headers["Content-Type"] = "multipart/form-data";
+    if(config.url==="http://localhost:8080/file/fileUpload"){
+      config.headers["Content-Type"] = "multipart/form-data; charset=utf-8";
     }
     else{
       config.headers["Content-Type"] = "application/x-www-form-urlencoded";

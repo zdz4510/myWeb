@@ -304,7 +304,7 @@ export default {
           if (valid) {
             // alert('submit!');
             let obj={
-              ...this.editForm
+              ...this.headeditForm
             }
             updateUserInfo(obj).then(data=>{
             let res=data;

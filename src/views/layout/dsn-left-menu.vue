@@ -26,7 +26,7 @@
       </router-link>
       <router-link to="/base/myTest">
         <el-menu-item index="7">
-          <span slot="title">心理测试</span>
+          <span slot="title">情绪测试</span>
         </el-menu-item>
       </router-link>
       
@@ -45,11 +45,11 @@
           <span slot="title">预警管理</span>
         </el-menu-item>
       </router-link>
-      <router-link to="/base/mine">
+      <!-- <router-link to="/base/mine">
         <el-menu-item index="6">
           <span slot="title">我的信息</span>
         </el-menu-item>
-      </router-link>
+      </router-link> -->
     </el-menu>
   </div>
 </template>
