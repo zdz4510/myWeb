@@ -11,7 +11,8 @@ axios.interceptors.request.use(
     console.log(config.url,"何时使用")
     if(config.url==="http://blog.natapp1.cc/mcs/file/upload"){
       config.headers["Content-Type"] = "multipart/form-data";
-    }else{
+    }
+    else{
       config.headers["Content-Type"] = "application/x-www-form-urlencoded";
     }
     const token = Vue.$cookies.get("mcs.sessionId");

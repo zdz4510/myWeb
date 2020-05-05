@@ -27,7 +27,7 @@
           />
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="handlerQueryThis('query')">查询</el-button>
+            <el-button type="primary" @click="handlerQueryThis('formInline')">查询</el-button>
             <el-button type="primary" @click="handlerReset">重置</el-button>
             <el-button type="success" @click="handlerAdd">新增</el-button>
         </el-form-item>
@@ -157,6 +157,7 @@
 import {findMessageByMessage,deleteInsertMessage,addInsertMessage,updateInsertMessage,getInsertMessageListByThis} from "../api/insertMessage.api"
 import { mapGetters, mapMutations } from "vuex";
 import moment from "moment"
+import _ from "lodash"
 export default {
   name: "list",
   data() {
@@ -264,6 +265,9 @@ export default {
         dateTime: [
           { message: "日期必填", required: true, trigger: "change" }
         ],
+      },
+      cloneRow:{
+
       }
     };
   },
@@ -272,7 +276,7 @@ export default {
   },
   created() {
     // 查询所有
-    this.handlerQueryThis();
+    // this.handlerQueryThis('formInline');
   },
   methods: {
     handlerReset(){
@@ -285,10 +289,10 @@ export default {
         fell:"良好", // 默认自我感觉良好
         dateTime:[startDate, new Date()]
       }
-      this.handlerQueryThis();
+      this.handlerQueryThis("formInline");
     },
-    handlerQueryThis(){
-      this.$refs["formInline"].validate((valid) => {
+    handlerQueryThis(formName){
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           let obj={
             id:this.$cookies.get("mcs.id"),
@@ -340,6 +344,7 @@ export default {
                  message: res.data.data,
                 type: "success"
               });
+              this.handlerQueryThis("formInline");
               this.$refs["addForm"].resetFields();
             }
             else{
@@ -367,7 +372,8 @@ export default {
                  message: res.data.data,
                 type: "success"
               });
-              // this.handlerQueryThis();
+              this.editDialog=false;
+              this.handlerQueryThis("formInline");
               this.$refs["editForm"].resetFields();
             }else{
               this.$message({
@@ -381,8 +387,9 @@ export default {
     handleAdd() {},
     handleEdit(index, row) {
         this.editDialog=true;
-        row.dateTime=Math.round(new Date(row.dateTime));
-        this.editForm=row;
+        this.cloneRow=_.cloneDeep(row);
+        this.cloneRow.dateTime=Math.round(new Date(row.dateTime))
+        this.editForm=this.cloneRow;
     },
     handleDelete(index, row) {
       row.dateTime=moment(row.dateTime).format("YYYY-MM-DD");
@@ -394,7 +401,7 @@ export default {
                 type: "success"
               });
             }
-            this.handlerQueryThis();
+            this.handlerQueryThis("formInline");
           })
     },
   }

@@ -274,7 +274,7 @@ export default {
     clearInterval(this.timer);
   },
   created() {
-    this.myName=this.user.username;
+    this.myName=this.$cookies.get("mcs.username")?this.$cookies.get("mcs.username"):"请重新登录";
     this.query();
     this.number=this.message1.length+this.message2.length;
   },
