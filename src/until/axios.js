@@ -1,4 +1,5 @@
 import axios from "axios";
+import router from "@/router/";
 import Vue from 'vue'
 import qs from "qs";
 axios.defaults.timeout = 60000;
@@ -44,21 +45,21 @@ axios.interceptors.response.use(
   response => {
     //  ('end')
     //  Indicator.close();
-    if (response.data.errCode == 2) {
-      // router.push({
-      //     path: "/login",
-      //     query: { redirect: router.currentRoute.fullPath }
-      // });
-    } else if (response.data.errCode == 500) {
-      ("code:500");
-    }
-    //  (response.data);
+    if (response.data.code == 401) {
+      router.push({
+        path: "/login",
+      });
+    } 
     return response;
   },
   error => {
     if (error.response) {
       switch (error.response.status) {
         case 401:
+          localStorage.removeItem("mcs.sessionId");
+          localStorage.removeItem("mcs.id");
+          localStorage.removeItem("mcs.username");
+          this.$router.replace('/login')
           //500 服务器错误
           // router.replace({
           //     path: '/error',
@@ -70,6 +71,14 @@ axios.interceptors.response.use(
           // router.replace({
           //     path: '/error',
           //     query: { redirect: router.currentRoute.fullPath, title: "哎呀,服务器开小差了！(*^__^*) ", code: "404" }
+          // })
+          break;
+        case 412:
+          //500 服务器错误
+          
+          // router.replace({
+          //     path: '/error',
+          //     query: { title: "哎呀,服务器开小差了！(*^__^*) ", code: "500" }
           // })
           break;
         case 500:
@@ -89,6 +98,8 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+
 /**
  * 上面是axios的默认配置
  */

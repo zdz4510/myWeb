@@ -304,6 +304,7 @@ export default {
           if (valid) {
             // alert('submit!');
             let obj={
+              id:this.$cookies.get("mcs.id"),
               ...this.headeditForm
             }
             updateUserInfo(obj).then(data=>{
