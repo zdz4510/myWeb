@@ -26,3 +26,8 @@ export const findListInsertMessage = data => {
 export const getInsertMessageListByThis = data => {
     return request.post(`${window.VUE_APP_URL}insert/getInsertMessageListByThis`, data);
 };
+
+// 按条件模糊查询
+export const getTestResultHttp = data => {
+    return request.post(`${window.VUE_APP_URL}insert/getTestResult`, data);
+};

@@ -3,7 +3,7 @@
  * to 要跳转的路径  如 /home
  * next  责任链模式
  */
-import { TOKEN, DEVELOPMENT } from "@/constant";
+import { TOKEN } from "@/constant";
 import VueCookies from "vue-cookies";
 export const toLogin = () => {
   window.location.href = `http://${window.location.host}/login`;

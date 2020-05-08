@@ -152,6 +152,9 @@
                 <div>
                     <b><span >我的得分：{{resultGrade}}</span> </b>
                 </div>
+                <div>
+                    <b><span >结果：{{result}}</span> </b>
+                </div>
             <span class="fb">参考标准：</span> 
             <p>
                 <table style="width:98%;" class="table-c">
@@ -209,6 +212,7 @@
 </template>
 
 <script>
+import {getTestResultHttp} from "../api/insertMessage.api"
 export default {
     name:'myTest',
     data(){
@@ -216,6 +220,7 @@ export default {
             resultDialog:false,
             resultGrade:"",
             resultGradeDes:"",
+            result:"",
             questionForm:{
                 resource1:"",
                 resource2:"",
@@ -369,8 +374,16 @@ export default {
             }else if(this.questionForm.resource10==="偶尔如此"){
                grade=grade+1; 
             }
-            this.resultDialog=true;
-            this.resultGrade=grade;
+            let obj={
+                number:grade
+            }
+            getTestResultHttp(obj).then(data=>{
+                let res=data.data.data;
+                this.result = res; 
+                this.resultDialog=true;
+                this.resultGrade=grade;
+            })
+            
           } else {
             console.log('error submit!!');
             return false;

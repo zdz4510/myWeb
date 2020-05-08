@@ -394,15 +394,15 @@ export default {
     handleDelete(index, row) {
       row.dateTime=moment(row.dateTime).format("YYYY-MM-DD");
       deleteInsertMessage(row).then(data=>{
-            let res=data;
-            if(res.data.code==200){
-              this.$message({
-                 message: "删除成功",
-                type: "success"
-              });
-            }
-            this.handlerQueryThis("formInline");
-          })
+        let res=data;
+        if(res.data.code==200){
+          this.$message({
+              message: "删除成功",
+            type: "success"
+          });
+        }
+        this.handlerQueryThis("formInline");
+      })
     },
   }
 };
