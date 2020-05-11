@@ -68,8 +68,12 @@
             </span>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item @click.native="handlerBtnShow"> <i class="el-icon-setting"></i>个人信息</el-dropdown-item>
-            <el-dropdown-item divided @click.native="handlerLoginOut"><i class="el-icon-setting"></i>  退出登陆</el-dropdown-item>
+            <el-dropdown-item @click.native="handlerBtnShow()">
+              <i class="el-icon-setting"></i>个人信息
+            </el-dropdown-item>
+            <el-dropdown-item divided @click.native="handlerLoginOut()">
+              <i class="el-icon-setting"></i>  退出登陆
+            </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -123,8 +127,13 @@
         <el-button type="primary" @click="loginOut()">确 定</el-button>
       </span>
     </el-dialog>
+    
     <!-- 编辑模态框 -->
-    <el-dialog title="编辑" :visible.sync="editDialog">
+    <el-dialog title="编辑" 
+      :visible.sync="editDialog" 
+      :modal-append-to-body="true"
+      :append-to-body="true"
+      >
       <el-form ref="headheadeditForm" :model="headeditForm" :rules="editRules" :label-width="formLabelWidth">
         <el-form-item
             label="用户名:"
@@ -314,8 +323,8 @@ export default {
                  message: "修改成功",
                 type: "success"
               });
+              this.editDialog=false;
             }
-            console.log("2222",res.data);
           })
           } else {
             console.log('error submit!!');

@@ -163,6 +163,8 @@ export default {
   data() {
     let startDate = new Date();
     startDate.setTime(startDate.getTime() - 3600 * 1000 * 24 * 7);
+    let end=new Date();
+    end.setTime(end.getTime() + 3600 * 1000 * 24);
     return { 
       editForm: {
           id:"",
@@ -187,7 +189,7 @@ export default {
           bloodPresure:"",
           heartRate:"",
           fell:"良好", // 默认自我感觉良好
-          dateTime: [startDate, new Date()]
+          dateTime: [startDate, end]
       },
       pickerOptions: {
         shortcuts: [
@@ -197,6 +199,7 @@ export default {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              end.setTime(end.getTime() + 3600 * 1000 * 24);
               picker.$emit("pick", [start, end]);
             }
           },
@@ -206,6 +209,7 @@ export default {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              end.setTime(end.getTime() + 3600 * 1000 * 24);
               picker.$emit("pick", [start, end]);
             }
           },
@@ -215,6 +219,7 @@ export default {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              end.setTime(end.getTime() + 3600 * 1000 * 24);
               picker.$emit("pick", [start, end]);
             }
           }
@@ -281,13 +286,15 @@ export default {
   methods: {
     handlerReset(){
       let startDate = new Date();
+      let end=new Date();
+      end.setTime(end.getTime() + 3600 * 1000 * 24);
       startDate.setTime(startDate.getTime() - 3600 * 1000 * 24 * 7);
       this.formInline={
         templature:"",
         bloodPresure:"",
         heartRate:"",
         fell:"良好", // 默认自我感觉良好
-        dateTime:[startDate, new Date()]
+        dateTime:[startDate, end]
       }
       this.handlerQueryThis("formInline");
     },

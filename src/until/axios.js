@@ -45,6 +45,7 @@ axios.interceptors.response.use(
   response => {
     //  ('end')
     //  Indicator.close();
+    console.log("test101,111",response.status)
     if (response.data.code == 401) {
       router.push({
         path: "/login",
