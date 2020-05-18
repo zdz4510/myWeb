@@ -153,6 +153,8 @@ import moment from "moment"
 import _ from "lodash"
 let startDate = new Date();
 startDate.setTime(startDate.getTime() - 3600 * 1000 * 24 * 7);
+let end=new Date();
+end.setTime(end.getTime() + 3600 * 1000 * 24);
 export default {
   name: "myHabit",
   data() {
@@ -237,7 +239,7 @@ export default {
         dateTime:new Date()
       },
       formInline:{
-          dateTime:[startDate, new Date()]
+          dateTime:[startDate, end]
       },
       pickerOptions: {
         shortcuts: [
@@ -247,6 +249,7 @@ export default {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              end.setTime(end.getTime() + 3600 * 1000 * 24);
               picker.$emit("pick", [start, end]);
             }
           },
@@ -256,6 +259,7 @@ export default {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              end.setTime(end.getTime() + 3600 * 1000 * 24);
               picker.$emit("pick", [start, end]);
             }
           },
@@ -265,6 +269,7 @@ export default {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              end.setTime(end.getTime() + 3600 * 1000 * 24);
               picker.$emit("pick", [start, end]);
             }
           }
@@ -316,17 +321,17 @@ export default {
         id:this.$cookies.get("mcs.id")
       }
       findAllHabitByTime(obj).then(data=>{
-        this.$message({
-              message: "查询成功",
-            type: "success"
-          });
         this.tableData=data.data;
       })
     },
     
     //重置
     handlerResetQuery(){
-      this.formInline.dateTime=[startDate, new Date()];
+      let startDate = new Date();
+      let end=new Date();
+      end.setTime(end.getTime() + 3600 * 1000 * 24);
+      startDate.setTime(startDate.getTime() - 3600 * 1000 * 24 * 7);
+      this.formInline.dateTime=[startDate, end];
       this.handlerQueryTime();
     },
     handleReset(formName) {
@@ -345,9 +350,7 @@ export default {
       }
     },
     handlerAdd(){
-      console.log(this.$refs["addForm"],"1111")
       this.$refs["addForm"].validate((valid) => {
-        console.log(valid,"222")
         if (valid) {
           this.addForm.id=this.$cookies.get("mcs.id");
           this.addForm.dateTime=moment(this.addForm.dateTime).format("YYYY-MM-DD")
@@ -359,7 +362,7 @@ export default {
                   message: "新增成功",
                 type: "success"
               });
-              this.handlerQuery();
+              this.handlerQueryTime();
             }else{
               this.$message({
                   message: res.data.message,
@@ -390,7 +393,7 @@ export default {
               message: "编辑成功",
             type: "success"
           });
-          this.handlerQuery();
+          this.handlerQueryTime();
         }else{
           this.$message({
               message: res.data.message,
@@ -409,7 +412,7 @@ export default {
                 type: "success"
               });
             }
-            this.handlerQuery();
+            this.handlerQueryTime();
           })
     }
   }

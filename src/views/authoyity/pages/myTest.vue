@@ -141,8 +141,8 @@
                     </div>
                 </el-form-item>
                 <el-form-item style="margin:16px 16px 0 16px" >
-                    <el-button @click="handlerReset('questionForm')">重置</el-button>
-                    <el-button @click="handlerSubmit('questionForm')">提交</el-button>
+                    <el-button type="primary" @click="handlerReset('questionForm')">重置</el-button>
+                    <el-button type="primary" @click="handlerSubmit('questionForm')">提交</el-button>
 
                 </el-form-item>
             </el-form>
@@ -153,7 +153,7 @@
                     <b><span >我的得分：{{resultGrade}}</span> </b>
                 </div>
                 <div>
-                    <b><span >结果：{{result}}</span> </b>
+                    <b><span >结果：{{result}}</span> </b><span>(本测试结果仅供参考，若您感觉自身的社交情绪状态堪忧，请及时就医)</span>
                 </div>
             <span class="fb">参考标准：</span> 
             <p>

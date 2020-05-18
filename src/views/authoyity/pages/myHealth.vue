@@ -3,8 +3,8 @@
   <div id="myHealth">
     <div class="showMessage">
       <div class="myHealth-right">
-        <el-form :inline="true" class="demo-form-inline">
-          <el-form-item label="日期：">
+        <el-form ref="formInline" :inline="true" :model="formInline" :rules="rules" class="demo-form-inline">
+          <el-form-item label="日期：" prop="showDate">
               <el-date-picker
                 v-model="formInline.showDate"
                 type="daterange"
@@ -18,7 +18,7 @@
               />
           </el-form-item>
           <el-form-item>
-                <el-button type="primary" @click.native="handlerQuery">查询</el-button>
+                <el-button type="primary" @click="handlerQuery('formInline')">查询</el-button>
                 <el-button  type="primary" @click.native="handlerReset">重置</el-button>
           </el-form-item>
           <div>
@@ -138,6 +138,9 @@ export default {
           { name: '不正常', num: 0 },
         ]
       },
+      rules: {
+        showDate: [{ required: true, message: "日期不为空", trigger: "blur" }],
+      },
       number1:0,
       number2:0,
       loading:false,
@@ -164,7 +167,7 @@ export default {
     }
   },
   created(){
-    this.handlerQuery();
+    // this.handlerQuery();
   },
   methods: {
     // 选中哪个就显示哪个数据
@@ -177,14 +180,6 @@ export default {
             type: "warning"
           });
       }
-      
-      // this.chartData={
-      //   columns: ['状态', '天数'],
-      //   rows: [
-      //     { '状态': '正常', '天数':3 },
-      //     { '状态': '不正常', '天数': 4 },
-      //   ]
-      // }
     },
     // 复选改变时
     handlerTest(){
@@ -196,43 +191,50 @@ export default {
       this.formInline={
           showDate:[startDate, new Date()]
         }
-      this.handlerQuery();
+      this.handlerQuery('formInline');
     },
-    handlerQuery(){
-      this.loading=true;
-      let id = this.$cookies.get("mcs.id");
-      let data={
-        startTime: moment(this.formInline.showDate[0]).format("YYYY-MM-DD"),
-        endTime: moment(this.formInline.showDate[1]).format("YYYY-MM-DD"),
-        id:id
-      }
-      setTimeout(() =>{
-        findListInsertMessage(data).then(data=>{
-        let res=data.data;
-        this.cloneData=_.cloneDeep(res);
-        this.changeData(res,this.radio);
-        let arr=[];
-        let obj={
-          dateTime:"",
-          templature:"",
-          heartRate:"",
-          bloodPresure:""
+    handlerQuery(formName){
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.loading=true;
+          let id = this.$cookies.get("mcs.id");
+          let data={
+            startTime: moment(this.formInline.showDate[0]).format("YYYY-MM-DD"),
+            endTime: moment(this.formInline.showDate[1]).format("YYYY-MM-DD"),
+            id:id
+          }
+          setTimeout(() =>{
+            findListInsertMessage(data).then(data=>{
+            let res=data.data;
+            this.cloneData=_.cloneDeep(res);
+            this.changeData(res,this.radio);
+            let arr=[];
+            let obj={
+              dateTime:"",
+              templature:"",
+              heartRate:"",
+              bloodPresure:""
+            }
+            res.forEach(item=>{
+              obj.dateTime=item.dateTime
+              obj.templature=item.templature
+              obj.heartRate=item.heartRate
+              obj.bloodPresure=item.bloodPresure
+              arr.push(obj);
+            })
+            let a =JSON.parse(JSON.stringify(res).replace(/dateTime/g,"日期"));
+            let b=JSON.parse(JSON.stringify(a).replace(/templature/g,"体温"));
+            let c=JSON.parse(JSON.stringify(b).replace(/heartRate/g,"心率"));
+            let d=JSON.parse(JSON.stringify(c).replace(/bloodPresure/g,"血压"));
+            this.chartData2.rows=d;
+            this.loading=false;
+          })
+          },1000);
+        } else {
+          return false;
         }
-        res.forEach(item=>{
-          obj.dateTime=item.dateTime
-          obj.templature=item.templature
-          obj.heartRate=item.heartRate
-          obj.bloodPresure=item.bloodPresure
-          arr.push(obj);
-        })
-        let a =JSON.parse(JSON.stringify(res).replace(/dateTime/g,"日期"));
-        let b=JSON.parse(JSON.stringify(a).replace(/templature/g,"体温"));
-        let c=JSON.parse(JSON.stringify(b).replace(/heartRate/g,"心率"));
-        let d=JSON.parse(JSON.stringify(c).replace(/bloodPresure/g,"血压"));
-        this.chartData2.rows=d;
-        this.loading=false;
-      })
-      },1000);
+      });
+      
       
     },
     changeData(data,radio){
