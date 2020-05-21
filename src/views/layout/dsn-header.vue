@@ -181,7 +181,7 @@
       :modal-append-to-body="true"
       :append-to-body="true"
       @close="handlerResetPass('modifyform')"
-      width="400px"
+      width="500px"
       :show-close="false"
     >
       <el-form
