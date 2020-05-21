@@ -19,7 +19,7 @@
         <el-form-item>
             <el-button type="primary" @click="handlerQueryTime">查询</el-button>
             <el-button type="primary" @click="handlerResetQuery">重置</el-button>
-            <el-button type="primary" @click="addDialog=true">新增</el-button>
+            <el-button type="success" @click="addDialog=true">新增</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -63,7 +63,7 @@
 
 
     <!-- 新增模态框 -->
-    <el-dialog title="新增" :visible.sync="addDialog">
+    <el-dialog title="新增" :visible.sync="addDialog" @close="handlerResetAdd('addForm')">
       <el-form  ref="addForm"  :model="addForm" :rules="addRules" :label-width="formLabelWidth">
         <el-form-item label="运动时长：" prop="sportTime">
           <el-input
@@ -297,6 +297,11 @@ export default {
     this.handlerQueryTime();
   },
   methods: {
+    handlerResetAdd(type) {
+      this.$nextTick(() => {
+        this.$refs[type].resetFields();
+      });
+    },
     // 查询全部
     handlerQuery(){
       let obj={
@@ -304,7 +309,6 @@ export default {
         endTime:moment(this.formInline.dateTime[1]).format("YYYY-MM-DD"),
         id:this.$cookies.get("mcs.id")
       }
-      console.log(obj)
       findAllHabit(obj).then(data=>{
         let res=data;
         if(res.data.code==200){

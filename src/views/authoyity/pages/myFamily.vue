@@ -3,7 +3,7 @@
     <div class="top-info">
       <el-form :inline="true" class="demo-form-inline">
         <el-form-item>
-            <el-button type="primary" @click="handlerAdd">新增</el-button>
+            <el-button type="success" @click="handlerAdd">新增</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -13,7 +13,7 @@
       :data="item" 
       :label="item.relation" 
       :name="item.carename"
-      style="margin-right:16px;background-color:#c9cbcf">
+      style="padding:16px 0;margin:16px;background-color:#c9cbcf">
         <el-form ref="form" :model="item" label-width="120px">
         <el-form-item label="关联用户姓名:">
         <el-input v-model="item.carename" :readonly="isReadonly"></el-input>
@@ -57,7 +57,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <el-dialog title="新增" :visible.sync="addDialog">
+    <el-dialog title="新增" :visible.sync="addDialog" @close="handlerResetAdd('addForm')">
       <el-form :model="addForm" ref="addForm">
         <el-form-item label="关联用户名：" prop="carename" :label-width="formLabelWidth">
           <el-input
@@ -104,6 +104,11 @@ export default {
     this.handlerQuery();
   },
   methods: {
+    handlerResetAdd(type) {
+      this.$nextTick(() => {
+        this.$refs[type].resetFields();
+      });
+    },
     // 新增关联用户
     handlerAdd(){
       this.addDialog=true;
@@ -147,10 +152,6 @@ export default {
       findRelationByMessage(obj).then(data=>{
         let res=data;
         if(res.data.code==200){
-          this.$message({
-              message: "查询成功",
-              type: "success"
-          });
           this.ralationData=res.data.data;
         }else{
           this.$message({
@@ -171,5 +172,6 @@ export default {
 <style lang="scss">
 #myFamily {
   padding: 30px;
+
 }
 </style>

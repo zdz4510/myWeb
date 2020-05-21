@@ -73,7 +73,7 @@
     </el-table>
 
     <!-- 编辑模态框 -->
-    <el-dialog title="编辑" :visible.sync="editDialog">
+    <el-dialog title="编辑" :visible.sync="editDialog" >
       <el-form :model="editForm" ref="editForm" :rules="rules">
         <el-form-item label="心率：" :label-width="formLabelWidth">
           <el-input
@@ -126,7 +126,7 @@
       </div>
     </el-dialog>
     <!-- 新增模态框 -->
-    <el-dialog title="新增" :visible.sync="addDialog">
+    <el-dialog title="新增" :visible.sync="addDialog" @close="handlerResetAdd('addForm')">
       <el-form :model="addForm" ref="addForm" :rules="rules">
         <el-form-item
           label="心率："
@@ -331,6 +331,11 @@ export default {
     // this.handlerQueryThis('formInline');
   },
   methods: {
+    handlerResetAdd(type) {
+      this.$nextTick(() => {
+        this.$refs[type].resetFields();
+      });
+    },
     handlerReset() {
       let startDate = new Date();
       let end = new Date();

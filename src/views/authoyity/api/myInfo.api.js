@@ -7,3 +7,6 @@ export const userInfo = data => {
 export const updateUserInfo = data => {
     return request.post(`${window.VUE_APP_URL}user/updateUserMessage`, data);
 };
+export const updateUserPassword = data => {
+    return request.post(`${window.VUE_APP_URL}user/updateUserPassword`, data);
+};
