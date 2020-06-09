@@ -9,7 +9,7 @@
         :inline="true"
         class="demo-form-inline"
       >
-        <el-form-item label="预警状态：">
+        <el-form-item label="预警状态：" prop="warnStatus">
           <el-select v-model="formInline.warnStatus" placeholder="请选择">
             <el-option
               v-for="item in warnStatusList"
@@ -20,7 +20,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="预警类型：">
+        <el-form-item label="预警类型：" prop="warnType">
           <el-select v-model="formInline.warnType" placeholder="请选择">
             <el-option
               v-for="item in warnTypeList"
@@ -31,14 +31,14 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="预警时间：" prop="warnTime">
+        <!-- <el-form-item label="预警时间：" prop="warnTime">
           <el-date-picker
             v-model="formInline.warnTime"
             type="date"
             placeholder="选择预警时间"
           >
           </el-date-picker>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-button type="primary" @click="handlerQueryThis">查询</el-button>
           <el-button type="primary" @click="handlerReset('formInline')"
@@ -156,8 +156,8 @@ export default {
         id: "",
         warnId: "",
         warnTime: new Date(),
-        warnType: "体温异常",
-        warnStatus: "未处理",
+        warnType: "",
+        warnStatus: "",
       },
       warnTypeList: [
         {
@@ -261,6 +261,8 @@ export default {
       cloneIndex: "",
       rules: {
         warnTime: [{ required: true, message: "日期不为空", trigger: "blur" }],
+        warnType: [{ required: true, message: "类型不为空", trigger: "blur" }],
+        warnStatus: [{ required: true, message: "状态不为空", trigger: "blur" }],
       },
     };
   },
@@ -274,7 +276,7 @@ export default {
         if (valid) {
           let obj = {
             warnType: this.formInline.warnType,
-            warnTime: moment(this.formInline.warnTime).format("YYYY-MM-DD"),
+            // warnTime: moment(this.formInline.warnTime).format("YYYY-MM-DD"),
             warnStatus: this.formInline.warnStatus,
             id: this.$cookies.get("mcs.id"),
           };
@@ -302,8 +304,8 @@ export default {
       this.formInline = {
         id: "",
         warnTime: new Date(),
-        warnType: "体温异常",
-        warnStatus: "未处理",
+        warnType: "",
+        warnStatus: "",
       };
       this.handlerQuery();
     },
